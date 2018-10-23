@@ -6,4 +6,140 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <string name="space">\u0020</string>
+
+    <string-array name="daz_title_list">
+        <item>Yuxudan oyanarkən edilən zikrlər</item>
+        <item>Paltar geyinərkən edilən dua</item>
+        <item>Təzə paltar geyinərkən edilən dua</item>
+        <item>Təzə paltar geyinən üçün edilən dua</item>
+        <item>Paltarı soyunarkən nə deyilir</item>
+        <item>Ayaqyoluna girərkən edilən dua</item>
+        <item>Ayaqyolundan çıxarkən edilən dua</item>
+        <item>Dəstəmazdan əvvəl edilən zikr</item>
+        <item>Dəstəmazdan sonra edilən zikr</item>
+        <item>Evdən çıxarkən edilən zikr</item>
+        <item>Məscidə gedərkən edilən dua</item>
+        <item>Məscidə girərkən edilən dua</item>
+        <item>Məsciddən çıxarkən edilən dua</item>
+        <item>Azan zikrləri</item>
+        <item>Namaza başlayarkən birinci təkbirdən  sonra edilən açılış duası</item>
+        <item>Rükuda  edilən dua</item>
+        <item>Rükudan qalxarkən edilən dua</item>
+        <item>Səcdədə edilən dua</item>
+        <item>İki səcdə arasında oturduqda edilən dua</item>
+        <item>Tilavət səcdəsində  edilən dua</item>
+        <item>Təşəhhüd</item>
+        <item>Təşəhhüddən sonra Peyğəmbərə (səllallahu aleyhi və səlləm) oxunan salavat</item>
+        <item>Axırıncı təşəhhüddən sonra, salamdan qabaq edilən dua</item>
+        <item>Salam verib namazı bitirdikdən sonra edilən zikrlər</item>
+        <item>İstixarə  namazının duası</item>
+        <item>Səhər və axşam zikrləri</item>
+        <item>Yatağa girərkən oxunan zikrlər</item>
+        <item>Gecə yatarkən bir tərəfdən digər tərəfə çevrildikdə edilən dua</item>
+        <item>Yuxuda həyəcan və qorxu keçirən, dəhşətə gələn və (başqa bu kimi) hallarda oxunan dua</item>
+        <item>Pis yuxu görən nə etməlidir</item>
+        <item>Vitr namazında edilən qunut duası</item>
+        <item>Vitr namazının salamından sonra edilən zikr</item>
+        <item>Üzüntü və kədər anında oxunan dua</item>
+        <item>Sıxıntı anında oxunan dua</item>
+        <item>Düşmən və ixtiyar sahibi ilə rastlaşarkən edilən dua</item>
+        <item>Rəhbərin zülmündən qorxan kimsənin etdiyi dua</item>
+        <item>Düşmənə qarşı edilən dua</item>
+        <item>Hər hansı bir camaatdan qorxan kimsənin etdiyi dua</item>
+        <item>İmanda şəkkə düşənin duası</item>
+        <item>Borcdan qurtarmaq üçün edilən dua</item>
+        <item>Namaz qılarkən yaxud Quran oxuyarkən gələn vəsvəsəyə qarşı edilən dua</item>
+        <item>Bir iş ağır gəldikdə edilən dua</item>
+        <item>Günah edən kəs nə deməli və nə etməlidir</item>
+        <item>Şeytanı və onun vəsvəsələrini uzaqlaşdıran dua</item>
+        <item>Xoşa gəlməyən bir hadisə baş verdikdə yaxud istədiyi bir iş baş tutmadıqda edilən dua</item>
+        <item>Övladı olanı təbrik etmək və bunun qarşılıqlı cavabı</item>
+        <item>Uşaqları qorumaq üçün oxunan dua</item>
+        <item>Xəstəni ziyarət edərkən onun üçün edilən dua</item>
+        <item>Xəstəni ziyarət etməyin fəziləti</item>
+        <item>Həyatından əlini üzmüş xəstənin duası</item>
+        <item>Can verənə təlqin edilən dua</item>
+        <item>Başına müsibət gələnin duası</item>
+        <item>Meyitin gözlərini qapayarkən edilən dua</item>
+        <item>Cənazə namazında meyit üçün oxunan dua</item>
+        <item>Həddi-büluğa çatmamış uşağın cənazə namazında oxunulan dua</item>
+        <item>Təziyə  duası</item>
+        <item>Cənazəni qəbrə qoyarkən edilən dua</item>
+        <item>Cənazəni dəfn etdikdən sonra edilən dua</item>
+        <item>Qəbirləri ziyarət edərkən oxunan dua</item>
+        <item>Külək əsərkən edilən dua</item>
+        <item>Göy guruldayarkən edilən dua</item>
+        <item>Yağışın yağması üçün edilən bəzi dualar</item>
+        <item>Yağış yağanda edilən dua</item>
+        <item>Yağış yağandan sonra edilən zikr</item>
+        <item>Havanın açılması üçün edilən dua</item>
+        <item>Hilal  görünərkən edilən dua</item>
+        <item>Oruc tutan iftarını açarkən etdiyi dua</item>
+        <item>Yeməyə başlayarkən edilən dua</item>
+        <item>Yeməkdən sonra edilən dua</item>
+        <item>Qonağın ona yemək verən üçün etdiyi dua</item>
+        <item>Su verən yaxud vermək istəyən şəxs üçün edilən dua</item>
+        <item>(Başqa evdə) orucunu açan şəxsin ev əhli üçün etdiyi dua</item>
+        <item>(Nafilə) oruc tutan şəxsin yemək süfrəsi açıldığı zaman orucunu  pozmaq istəmədikdə etdiyi dua</item>
+        <item>Oruc tutan onu söyən adama nə deməlidir</item>
+        <item>Novbar meyvə görərkən edilən dua</item>
+        <item>Asqırdıqda edilən dua</item>
+        <item>Kafir asqırıb əlhəmdulilləh desə, ona nə deyilir</item>
+        <item>Evlənən üçün edilən dua</item>
+        <item>Evlənən şəxsin özü üçün etdiyi dua və minik heyvanı alanın edəcəyi dua</item>
+        <item>Həyat yoldaşı ilə cinsi əlaqəyə girməmişdən əvvəl edilən dua</item>
+        <item>Qəzəblənərkən edilən dua</item>
+        <item>Müsibətə düçar olmuş kimsəni görərkən edilən dua</item>
+        <item>Məclisdə nə deyilir</item>
+        <item>Məclisin kəffarəsi</item>
+        <item>«Allah səni bağışlasın!» deyən üçün edilən dua</item>
+        <item>Sənə yaxşılıq edən şəxs üçün edəcəyin dua</item>
+        <item>O zikr ki, Allah onun sayəsində Dəccaldan qoruyar</item>
+        <item>«Səni Allah xatirinə sevirəm» deyən üçün edilən dua</item>
+        <item>Malını sənə təklif edən kimsə üçün edilən dua</item>
+        <item>Borcu qaytararkən onu verən şəxs üçün edilən dua</item>
+        <item>Allaha şərik qoşmaqdan qorxanın edəcəyi dua</item>
+        <item>Allah sənə bərəkət versin deyən adama nə deyilir</item>
+        <item>Bəd əlamətə  qarşı edilən dua</item>
+        <item>Minik vasitəsinə minərkən edilən dua</item>
+        <item>Səfər duası</item>
+        <item>Kəndə yaxud şəhərə daxil olarkən edilən dua</item>
+        <item>Bazara girərkən edilən dua</item>
+        <item>Minik vasitəsi büdrədikdə (ilişib qaldıqda) edilən dua</item>
+        <item>[Vidalaşdıqda] müsafirin sakinlər üçün etdiyi dua</item>
+        <item>[Vidalaşdıqda] sakinlərin müsafir üçün etdiyi dua</item>
+        <item>Səfərdə yol gedərkən təkbir və təsbih</item>
+        <item>Müsafirin səhərə yaxın etdiyi dua</item>
+        <item>Səfərdə və ya başqa vaxtlarda mənzil başına çatdıqda edilən dua</item>
+        <item>Səfərdən qayıdarkən edilən zikr</item>
+        <item>Sevindirici yaxud xoşagəlməyən hadisə ilə rastlaşan adam nə deməlidir</item>
+        <item>Peyğəmbər səllallahu aleyhi və səlləmə salavat gətirməyin fəziləti</item>
+        <item>Salamı yaymaq</item>
+        <item>Salam verən kafirin salamı necə alınmalıdır</item>
+        <item>Xoruz banlayarkən və ya uzunqulaq anqırarkən edilən dua</item>
+        <item>Gecə itlərin hürməsini eşidərkən edilən dua</item>
+        <item>Söydüyün adam üçün edəcəyin dua</item>
+        <item>Müsəlman müsəlmanı tərifləyəndə nə deməlidir</item>
+        <item>Təriflənən müsəlman nə deməlidir</item>
+        <item>Həcc və ya ümrə ziyarəti əsnasında ihramda olan şəxs  necə təlbiyə  etməlidir</item>
+        <item>Qara daş yerləşən küncə gəlib çatdıqda təkbir gətirmək</item>
+        <item>Yəmən küncü ilə qara daş arasında edilən dua</item>
+        <item>Səfa və Mərvə dağları üzərində dayandıqda edilən dua</item>
+        <item>Ərafa günü  edilən dua</item>
+        <item>Məşərülhəramda edilən zikr</item>
+        <item>Cəməratda hər daşı atarkən təkbir etmək</item>
+        <item>Təəccüblənərkən və ya sevinərkən edilən dua</item>
+        <item>Sevindirici hadisə ilə rastlaşan adam nə etməlidir</item>
+        <item>Bədənində ağrı hiss edən nə deməlidir</item>
+        <item>Bir şeyi gözə gətirəcəyindən qorxan adamın etdiyi dua</item>
+        <item>Qorxduqda nə deyilir</item>
+        <item>Qurban kəsərkən nə deyilir</item>
+        <item>Üsyankar şeytanların hiyləsini dəf etmək üçün nə deyilir</item>
+        <item>Bağışlanma diləmək və tövbə etmək</item>
+        <item>Təsbih, təhmid, təhlil və təkbirin fəziləti</item>
+        <item>Peyğəmbər (səllallahu aleyhi və səlləm) necə zikr edərdi</item>
+        <item>Bəzi xeyir növləri və ədəb qaydaları</item>
+    </string-array>
 </resources>

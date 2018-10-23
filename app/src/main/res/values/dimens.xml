@@ -4,5 +4,17 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="zero_size">0dp</dimen>
+
+    <dimen name="margin_l">16dp</dimen>
+    <dimen name="margin">8dp</dimen>
+    <dimen name="margin_s">4dp</dimen>
+
+    <dimen name="padding">8dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+
+    <dimen name="single_line_list_item_text">16sp</dimen>
+
+    <integer name="daz_title_number_pad">3</integer>
 </resources>
