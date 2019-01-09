@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_hide_or_display_play"
+        android:icon="@drawable/ic_menu_camera"
+        android:orderInCategory="100"
+        android:title="@string/action_hide_or_display_play"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_bookmark"
+        android:icon="@drawable/ic_menu_manage"
+        android:orderInCategory="101"
+        android:title="@string/action_bookmark"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_menu_share"
+        android:orderInCategory="102"
+        android:title="@string/action_share"
+        app:showAsAction="ifRoom" />
+</menu>
