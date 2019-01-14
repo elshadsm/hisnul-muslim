@@ -43,17 +43,17 @@ class DazTitleListAdapter(private val context: Context) :
     override fun onClick(view: View) {
       val intent = Intent(view.context, DazViewActivity::class.java)
       intent.putExtra(DAZ_EXTRA_NAME, DazData(
-          "Səhər və axşam zikrləri",
+          "(Nafilə) oruc tutan şəxsin yemək süfrəsi açıldığı zaman orucunu  pozmaq istəmədikdə etdiyi dua",
           "لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الحَمدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللهِ، وَالحَمدُ للهِ، وَلَا إِلَهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيمِ، رَبِّ اغْفِرْ لِي",
-          "Lə ilahə illəllahu vəhdahu lə şərikə\n" +
-              "ləhu, ləhul-mulku və ləhul-həmdu\n" +
-              "və huvə alə kulli şeyin qadir, subhanal-lahi, vəlhəmdulilləhi, və lə ilahə illallahu,\n" +
-              "vəllahu əkbər, və lə həulə və lə\n" +
-              "quvvətə illə billəhil-aliyyil-azim, rabbiğfir\n" +
+          "Lə ilahə illəllahu vəhdahu lə şərikə" +
+              "ləhu, ləhul-mulku və ləhul-həmdu" +
+              "və huvə alə kulli şeyin qadir, subhanal-lahi, vəlhəmdulilləhi, və lə ilahə illallahu," +
+              "vəllahu əkbər, və lə həulə və lə" +
+              "quvvətə illə billəhil-aliyyil-azim, rabbiğfir" +
               "li",
-          "Bədənimə salamatlıq verən, ruhumu\n" +
-              "mənə qaytaran və mənə Onu\n" +
-              "yad etməyə izin verən Allaha həmd\n" +
+          "Bədənimə salamatlıq verən, ruhumu" +
+              "mənə qaytaran və mənə Onu" +
+              "yad etməyə izin verən Allaha həmd" +
               "olsun!",
           "ət-Tirmizi, 5/473. Bax: «Səhihu-t-Tirmizi», 3/144.",
           "12/24"

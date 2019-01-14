@@ -40,8 +40,15 @@
                     <TextView
                         android:id="@+id/ctl_title"
                         android:layout_width="@dimen/zero_size"
-                        android:layout_height="wrap_content"
+                        android:layout_height="44dp"
                         android:text="@{dazData.title}"
+                        android:textColor="@color/gray_100"
+                        android:fontFamily="sans-serif-medium"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="@dimen/ctl_title_min_text_size"
+                        app:autoSizeMaxTextSize="@dimen/ctl_title_max_text_size"
+                        app:autoSizeStepGranularity="@dimen/title_step_granularity"
+                        android:gravity="center"
                         app:layout_collapseMode="parallax"
                         app:layout_collapseParallaxMultiplier="0.7"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,19 +56,24 @@
                         android:layout_marginStart="@dimen/margin_l"
                         android:layout_marginBottom="@dimen/margin_xl"
                         android:layout_marginEnd="@dimen/margin_l"
-                        app:layout_constraintEnd_toStartOf="@+id/ctl_pagination" />
+                        app:layout_constraintEnd_toStartOf="@+id/ctl_pagination"
+                        />
 
                     <TextView
                         android:id="@+id/ctl_pagination"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="44dp"
                         android:text="@{dazData.pagination}"
+                        android:textSize="@dimen/toolbar_pagination_text"
+                        android:textColor="@color/white"
+                        android:fontFamily="sans-serif-bold"
+                        android:gravity="center"
                         app:layout_collapseMode="parallax"
                         app:layout_collapseParallaxMultiplier="0.7"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginBottom="@dimen/margin_xl"
-                        android:layout_marginEnd="@dimen/margin_l" />
+                        android:layout_marginEnd="@dimen/margin_l"
+                        app:layout_constraintBottom_toBottomOf="@+id/ctl_title"
+                        app:layout_constraintTop_toTopOf="@+id/ctl_title" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -80,27 +92,40 @@
                         <TextView
                             android:id="@+id/toolbar_title"
                             android:layout_width="@dimen/zero_size"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:text="@{dazData.title}"
+                            android:textColor="@color/gray_100"
+                            android:fontFamily="sans-serif-medium"
                             android:visibility="invisible"
                             android:layout_gravity="start"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeMinTextSize="@dimen/toolbar_title_min_text_size"
+                            app:autoSizeMaxTextSize="@dimen/toolbar_title_max_text_size"
+                            app:autoSizeStepGranularity="@dimen/title_step_granularity"
+                            android:gravity="center"
                             app:layout_constraintEnd_toStartOf="@+id/toolbar_pagination"
                             android:layout_marginEnd="@dimen/margin_l"
-                            app:layout_constraintStart_toStartOf="parent" />
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginBottom="@dimen/margin"
+                            android:layout_marginTop="@dimen/margin"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/toolbar_pagination"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{dazData.pagination}"
+                            android:textSize="@dimen/toolbar_pagination_text"
+                            android:textColor="@color/white"
+                            android:fontFamily="sans-serif-bold"
                             android:visibility="invisible"
                             android:layout_gravity="end"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            android:layout_marginEnd="@dimen/margin_l" />
+                            android:layout_marginEnd="@dimen/margin_l"
+                            app:layout_constraintTop_toTopOf="@+id/toolbar_title"
+                            app:layout_constraintBottom_toBottomOf="@+id/toolbar_title" />
 
                     </android.support.constraint.ConstraintLayout>
 
@@ -114,7 +139,10 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:padding="@dimen/margin_l">
+            android:paddingLeft="@dimen/padding"
+            android:paddingTop="@dimen/padding_l"
+            android:paddingRight="@dimen/padding"
+            android:paddingBottom="@dimen/padding_l">
 
             <LinearLayout
                 android:id="@+id/liner_layout"
@@ -126,26 +154,76 @@
                     android:id="@+id/arabic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{dazData.arabic}" />
+                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginRight="@dimen/margin"
+                    android:text="@{dazData.arabic}"
+                    android:textSize="@dimen/arabic_text_size"
+                    android:fontFamily="@font/uthman_tn_1_ver_10" />
 
-                <TextView
-                    android:id="@+id/compiled"
+                <LinearLayout
+                    android:id="@+id/compiled_liner_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{dazData.compiled}" />
+                    android:layout_marginTop="@dimen/margin_l"
+                    android:layout_marginEnd="@dimen/margin"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/translation"
+                    <View
+                        android:id="@+id/compiled_line"
+                        android:layout_height="match_parent"
+                        android:layout_width="@dimen/text_prefix_line_width"
+                        android:background="@color/colorPrimaryDark" />
+
+                    <TextView
+                        android:id="@+id/compiled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{dazData.compiled}"
+                        android:textSize="@dimen/compiled_text_size"
+                        android:layout_marginStart="@dimen/margin" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/translation_liner_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{dazData.translation}" />
+                    android:layout_marginTop="@dimen/margin_l"
+                    android:layout_marginEnd="@dimen/margin"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/translation_line"
+                        android:layout_height="match_parent"
+                        android:layout_width="@dimen/text_prefix_line_width"
+                        android:background="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/translation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin"
+                        android:text="@{dazData.translation}"
+                        android:textSize="@dimen/translation_text_size" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/reference"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{dazData.reference}" />
+                    android:text="@{dazData.reference}"
+                    android:textSize="@dimen/reference_text_size"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginTop="@dimen/margin_l"
+                    android:layout_marginRight="@dimen/margin" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/download_play_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/margin_l"
+            app:srcCompat="@drawable/ic_file_download_white_24dp" />
     </android.support.design.widget.CoordinatorLayout>
 </layout>

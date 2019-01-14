@@ -8,6 +8,7 @@
     <dimen name="daz_view_activity_app_bar_elevation">4dp</dimen>
     <dimen name="daz_view_activity_collapsing_toolbar_layout_margin_start">48dp</dimen>
     <dimen name="extended_top_app_bar_height">128dp</dimen>
+    <dimen name="text_prefix_line_width">3dp</dimen>
 
     <dimen name="zero_size">0dp</dimen>
 
@@ -16,10 +17,21 @@
     <dimen name="margin">8dp</dimen>
     <dimen name="margin_s">4dp</dimen>
 
+    <dimen name="padding_l">16dp</dimen>
     <dimen name="padding">8dp</dimen>
     <dimen name="padding_10">10dp</dimen>
 
     <dimen name="single_line_list_item_text">16sp</dimen>
+    <dimen name="toolbar_pagination_text">20sp</dimen>
+    <dimen name="ctl_title_min_text_size">12sp</dimen>
+    <dimen name="ctl_title_max_text_size">20sp</dimen>
+    <dimen name="title_step_granularity">1sp</dimen>
+    <dimen name="toolbar_title_min_text_size">10sp</dimen>
+    <dimen name="toolbar_title_max_text_size">20sp</dimen>
+    <dimen name="arabic_text_size">30sp</dimen>
+    <dimen name="compiled_text_size">18sp</dimen>
+    <dimen name="translation_text_size">16sp</dimen>
+    <dimen name="reference_text_size">14sp</dimen>
 
     <integer name="daz_title_number_pad">3</integer>
 </resources>
