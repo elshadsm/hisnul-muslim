@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="dazData"
+            type="com.elshadsm.muslim.hisnul.models.DazData" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/fragment_daz_view_nested_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingLeft="@dimen/padding"
+            android:paddingTop="@dimen/padding_l"
+            android:paddingRight="@dimen/padding"
+            android:paddingBottom="@dimen/padding_l">
+
+            <LinearLayout
+                android:id="@+id/liner_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/arabic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginRight="@dimen/margin"
+                    android:text="@{dazData.arabic}"
+                    android:textSize="@dimen/arabic_text_size"
+                    android:fontFamily="@font/uthman_tn_1_ver_10" />
+
+                <LinearLayout
+                    android:id="@+id/compiled_liner_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_l"
+                    android:layout_marginEnd="@dimen/margin"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/compiled_line"
+                        android:layout_height="match_parent"
+                        android:layout_width="@dimen/text_prefix_line_width"
+                        android:background="@color/colorPrimaryDark" />
+
+                    <TextView
+                        android:id="@+id/compiled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{dazData.compiled}"
+                        android:textSize="@dimen/compiled_text_size"
+                        android:layout_marginStart="@dimen/margin" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/translation_liner_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_l"
+                    android:layout_marginEnd="@dimen/margin"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/translation_line"
+                        android:layout_height="match_parent"
+                        android:layout_width="@dimen/text_prefix_line_width"
+                        android:background="@color/colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/translation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin"
+                        android:text="@{dazData.translation}"
+                        android:textSize="@dimen/translation_text_size" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/reference"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{dazData.reference}"
+                    android:textSize="@dimen/reference_text_size"
+                    android:layout_marginLeft="@dimen/margin"
+                    android:layout_marginTop="@dimen/margin_l"
+                    android:layout_marginRight="@dimen/margin" />
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </FrameLayout>
+</layout>

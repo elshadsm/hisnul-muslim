@@ -8,8 +8,7 @@ class DazData(
     var arabic: String? = "",
     var compiled: String? = "",
     var translation: String? = "",
-    var reference: String? = "",
-    var pagination: String? = "") : Parcelable {
+    var reference: String? = "") : Parcelable {
 
   constructor(parcel: Parcel) : this() {
     title = parcel.readString()
@@ -17,7 +16,6 @@ class DazData(
     compiled = parcel.readString()
     translation = parcel.readString()
     reference = parcel.readString()
-    pagination = parcel.readString()
   }
 
   override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -26,7 +24,6 @@ class DazData(
     parcel.writeString(compiled)
     parcel.writeString(translation)
     parcel.writeString(reference)
-    parcel.writeString(pagination)
   }
 
   override fun describeContents(): Int {

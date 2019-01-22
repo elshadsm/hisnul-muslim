@@ -9,8 +9,12 @@
     <string name="action_hide_or_display_play">Hide or Display play</string>
     <string name="action_bookmark">Bookmark</string>
     <string name="action_share">Share</string>
+    <string name="daz_view_pagination">%1$d/%2$d</string>
 
     <string name="space">\u0020</string>
     <string name="empty" />
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
