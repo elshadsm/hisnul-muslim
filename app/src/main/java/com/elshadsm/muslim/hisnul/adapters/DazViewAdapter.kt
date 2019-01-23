@@ -1,9 +1,9 @@
 package com.elshadsm.muslim.hisnul.adapters
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.elshadsm.muslim.hisnul.fragments.DazViewFragment
 import com.elshadsm.muslim.hisnul.models.DAZ_PARCEABLE_NAME
 import com.elshadsm.muslim.hisnul.models.DazData

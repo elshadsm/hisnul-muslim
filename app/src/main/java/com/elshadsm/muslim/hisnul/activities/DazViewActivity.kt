@@ -1,10 +1,10 @@
 package com.elshadsm.muslim.hisnul.activities
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.design.widget.AppBarLayout
-import android.support.v4.view.ViewPager
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.AppBarLayout
+import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -117,6 +117,7 @@ class DazViewActivity : AppCompatActivity() {
   private fun getMockData(): ArrayList<DazData> {
     return arrayListOf(DazData(
         "(Nafilə) oruc tutan şəxsin yemək süfrəsi açıldığı zaman orucunu  pozmaq istəmədikdə etdiyi dua",
+        "لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الحَمدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللهِ، وَالحَمدُ للهِ، وَلَا إِلَهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيمِ، رَبِّ اغْفِرْ لِي" +
         "لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الحَمدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللهِ، وَالحَمدُ للهِ، وَلَا إِلَهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيمِ، رَبِّ اغْفِرْ لِي",
         "Lə ilahə illəllahu vəhdahu lə şərikə" +
             "ləhu, ləhul-mulku və ləhul-həmdu" +

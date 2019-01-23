@@ -1,16 +1,15 @@
 package com.elshadsm.muslim.hisnul.activities
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.LinearLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.adapters.DazTitleListAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -72,7 +71,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     toggle.syncState()
     nav_view.setNavigationItemSelectedListener(this)
     val recyclerView = findViewById<RecyclerView>(R.id.daz_title_list_recycler_view)
-    recyclerView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+    recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
     recyclerView.adapter = DazTitleListAdapter(this)
   }
 
