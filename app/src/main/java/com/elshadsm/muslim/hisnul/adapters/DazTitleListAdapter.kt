@@ -9,12 +9,28 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.activities.DazViewActivity
+import com.elshadsm.muslim.hisnul.database.AppDataBase
+import com.elshadsm.muslim.hisnul.database.Title
 import com.elshadsm.muslim.hisnul.models.DAZ_ID_EXTRA_NAME
+import com.elshadsm.muslim.hisnul.services.GetTitleListFromDbTask
 
 class DazTitleListAdapter(private val context: Context) :
     RecyclerView.Adapter<DazTitleListAdapter.RecyclerViewHolder>() {
 
-  private val titleList: Array<String> = context.resources.getStringArray(R.array.daz_title_list)
+  private var titleList = listOf<Title>()
+
+  val appDataBase: AppDataBase = AppDataBase.getInstance(context)
+
+  init {
+    GetTitleListFromDbTask(this).execute()
+  }
+
+  fun setData(data: List<Title>?) {
+    data?.let {
+      titleList = it
+      notifyDataSetChanged()
+    }
+  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
@@ -22,13 +38,12 @@ class DazTitleListAdapter(private val context: Context) :
     return RecyclerViewHolder(layoutInflater)
   }
 
-  override fun getItemCount(): Int {
-    return titleList.size
-  }
+  override fun getItemCount(): Int = titleList.size
 
   override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-    holder.number.text = (position + 1).toString().padStart(context.resources.getInteger(R.integer.daz_title_number_pad))
-    holder.title.text = titleList[position]
+    val title = titleList[position]
+    holder.number.text = title.index.toString().padStart(context.resources.getInteger(R.integer.daz_title_number_pad))
+    holder.title.text = title.text
   }
 
   class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
