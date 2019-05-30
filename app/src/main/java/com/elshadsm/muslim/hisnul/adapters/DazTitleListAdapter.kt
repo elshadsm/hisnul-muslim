@@ -46,7 +46,7 @@ class DazTitleListAdapter(private val context: Context) :
     holder.title.text = title.text
   }
 
-  class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+  inner class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
     val number = itemView.findViewById<TextView>(R.id.daz_title_li_number)!!
     val title = itemView.findViewById<TextView>(R.id.daz_title_li_title)!!
 
@@ -56,7 +56,7 @@ class DazTitleListAdapter(private val context: Context) :
 
     override fun onClick(view: View) {
       val intent = Intent(view.context, DazViewActivity::class.java)
-      intent.putExtra(DAZ_ID_EXTRA_NAME, adapterPosition)
+      intent.putExtra(DAZ_ID_EXTRA_NAME, titleList[adapterPosition]._id)
       view.context.startActivity(intent)
     }
 

@@ -1,5 +1,6 @@
 package com.elshadsm.muslim.hisnul.activities
 
+import android.os.AsyncTask
 import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,8 @@ import android.view.View
 import com.elshadsm.muslim.hisnul.BR
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.adapters.DazViewAdapter
+import com.elshadsm.muslim.hisnul.database.AppDataBase
+import com.elshadsm.muslim.hisnul.database.Dhikr
 import com.elshadsm.muslim.hisnul.databinding.ActivityDazViewBinding
 import com.elshadsm.muslim.hisnul.models.DAZ_ID_EXTRA_NAME
 import com.elshadsm.muslim.hisnul.models.DazData
@@ -20,6 +23,8 @@ class DazViewActivity : AppCompatActivity() {
   private var menu: Menu? = null
   private lateinit var binding: ActivityDazViewBinding
   private lateinit var pagerAdapter: DazViewAdapter
+
+  private lateinit var appDataBase: AppDataBase
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -52,14 +57,10 @@ class DazViewActivity : AppCompatActivity() {
   private fun applyConfiguration() {
     if (intent.hasExtra(DAZ_ID_EXTRA_NAME)) {
       val data = intent.extras
-      val dazId: Int? = data?.getInt(DAZ_ID_EXTRA_NAME)
-      val dazDataList: List<DazData> = getMockData()
+      appDataBase = AppDataBase.getInstance(this)
+      val dazId = data?.getInt(DAZ_ID_EXTRA_NAME) ?: 1
       pagerAdapter = DazViewAdapter(supportFragmentManager)
-      pagerAdapter.setData(dazDataList)
-      binding.viewPager.adapter = pagerAdapter
-      binding.setVariable(BR.dazData, dazDataList[0])
-      binding.executePendingBindings()
-      updatePagination(1, pagerAdapter.count)
+      GetDazFromDbTask(this, dazId).execute()
     }
   }
 
@@ -113,55 +114,22 @@ class DazViewActivity : AppCompatActivity() {
     binding.ctlPagination.text = pagination
   }
 
-  //  Remove the function below
-  private fun getMockData(): ArrayList<DazData> {
-    return arrayListOf(DazData(
-        "(Nafilə) oruc tutan şəxsin yemək süfrəsi açıldığı zaman orucunu  pozmaq istəmədikdə etdiyi dua",
-        "لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الحَمدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللهِ، وَالحَمدُ للهِ، وَلَا إِلَهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيمِ، رَبِّ اغْفِرْ لِي" +
-        "لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الحَمدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللهِ، وَالحَمدُ للهِ، وَلَا إِلَهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيمِ، رَبِّ اغْفِرْ لِي",
-        "Lə ilahə illəllahu vəhdahu lə şərikə" +
-            "ləhu, ləhul-mulku və ləhul-həmdu" +
-            "və huvə alə kulli şeyin qadir, subhanal-lahi, vəlhəmdulilləhi, və lə ilahə illallahu," +
-            "vəllahu əkbər, və lə həulə və lə" +
-            "quvvətə illə billəhil-aliyyil-azim, rabbiğfir" +
-            "li",
-        "Bədənimə salamatlıq verən, ruhumu" +
-            "mənə qaytaran və mənə Onu" +
-            "yad etməyə izin verən Allaha həmd" +
-            "olsun!",
-        "ət-Tirmizi, 5/473. Bax: «Səhihu-t-Tirmizi», 3/144."
-    ),
-        DazData(
-            "(Nafilə) oruc tutan şəxsin yemək süfrəsi açıldığı zaman orucunu  pozmaq istəmədikdə etdiyi dua",
-            "لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الحَمدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللهِ، وَالحَمدُ للهِ، وَلَا إِلَهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيمِ، رَبِّ اغْفِرْ لِي",
-            "Lə ilahə illəllahu vəhdahu lə şərikə" +
-                "ləhu, ləhul-mulku və ləhul-həmdu" +
-                "və huvə alə kulli şeyin qadir, subhanal-lahi, vəlhəmdulilləhi, və lə ilahə illallahu," +
-                "vəllahu əkbər, və lə həulə və lə" +
-                "quvvətə illə billəhil-aliyyil-azim, rabbiğfir" +
-                "li",
-            "Bədənimə salamatlıq verən, ruhumu" +
-                "mənə qaytaran və mənə Onu" +
-                "yad etməyə izin verən Allaha həmd" +
-                "olsun!",
-            "ət-Tirmizi, 5/473. Bax: «Səhihu-t-Tirmizi», 3/144."
-        ),
-        DazData(
-            "(Nafilə) oruc tutan şəxsin yemək süfrəsi açıldığı zaman orucunu  pozmaq istəmədikdə etdiyi dua",
-            "لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الحَمدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللهِ، وَالحَمدُ للهِ، وَلَا إِلَهَ إِلَّا اللهُ وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيمِ، رَبِّ اغْفِرْ لِي",
-            "Lə ilahə illəllahu vəhdahu lə şərikə" +
-                "ləhu, ləhul-mulku və ləhul-həmdu" +
-                "və huvə alə kulli şeyin qadir, subhanal-lahi, vəlhəmdulilləhi, və lə ilahə illallahu," +
-                "vəllahu əkbər, və lə həulə və lə" +
-                "quvvətə illə billəhil-aliyyil-azim, rabbiğfir" +
-                "li",
-            "Bədənimə salamatlıq verən, ruhumu" +
-                "mənə qaytaran və mənə Onu" +
-                "yad etməyə izin verən Allaha həmd" +
-                "olsun!",
-            "ət-Tirmizi, 5/473. Bax: «Səhihu-t-Tirmizi», 3/144."
-        ))
+  companion object {
+
+    class GetDazFromDbTask(private val reference: DazViewActivity, private val titleId: Int) : AsyncTask<Void, Void, List<Dhikr>>() {
+
+      override fun doInBackground(vararg params: Void?): List<Dhikr> = reference.appDataBase.dhikrDao().getDhikr(1)
+
+      override fun onPostExecute(titleList: List<Dhikr>?) {
+        val dazDataList = reference.appDataBase.dhikrDao().getDhikr(titleId)
+        reference.pagerAdapter.setData(dazDataList)
+        reference.binding.viewPager.adapter = reference.pagerAdapter
+        reference.binding.setVariable(BR.dhikr, dazDataList[0])
+        reference.binding.executePendingBindings()
+        reference.updatePagination(1, reference.pagerAdapter.count)
+      }
+
+    }
   }
-  //  Remove the function above
 
 }

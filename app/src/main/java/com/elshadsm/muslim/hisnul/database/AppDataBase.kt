@@ -14,6 +14,7 @@ import java.io.IOException
 abstract class AppDataBase : RoomDatabase() {
 
   abstract fun titleDao(): TitleDao
+  abstract fun dhikrDao(): DhikrDao
 
   companion object {
 
@@ -40,6 +41,7 @@ abstract class AppDataBase : RoomDatabase() {
     private fun createInstance(context: Context): AppDataBase {
       copyAttachedDatabase(context)
       return Room.databaseBuilder(context.applicationContext, AppDataBase::class.java, DATABASE_NAME)
+          .allowMainThreadQueries()
           .addMigrations(MIGRATION_1_2)
           .build()
     }

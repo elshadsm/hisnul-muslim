@@ -8,19 +8,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.elshadsm.muslim.hisnul.BR
 import com.elshadsm.muslim.hisnul.R
+import com.elshadsm.muslim.hisnul.database.Dhikr
 import com.elshadsm.muslim.hisnul.databinding.FragmentDazViewBinding
 import com.elshadsm.muslim.hisnul.models.DAZ_PARCEABLE_NAME
 import com.elshadsm.muslim.hisnul.models.DazData
 
 class DazViewFragment : Fragment() {
 
-  private var dazData: DazData? = null
+  private var dhikr: Dhikr? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     arguments?.let {
       if (it.containsKey(DAZ_PARCEABLE_NAME)) {
-        dazData = it.getParcelable(DAZ_PARCEABLE_NAME)
+        dhikr = it.getParcelable(DAZ_PARCEABLE_NAME)
       }
     }
   }
@@ -28,8 +29,8 @@ class DazViewFragment : Fragment() {
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                             savedInstanceState: Bundle?): View? {
     val binding = DataBindingUtil.inflate<FragmentDazViewBinding>(inflater, R.layout.fragment_daz_view, container, false)
-    dazData?.let {
-      binding.setVariable(BR.dazData, dazData)
+    dhikr?.let {
+      binding.setVariable(BR.dhikr, dhikr)
       binding.executePendingBindings()
     }
     return binding.root

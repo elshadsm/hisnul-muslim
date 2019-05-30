@@ -5,12 +5,9 @@ import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
-interface TitleDao {
+interface DhikrDao {
 
-  @Insert
-  fun insert(cities: List<Title>)
-
-  @Query("SELECT * FROM title")
-  fun getAll(): List<Title>
+  @Query("SELECT * from dhikr where title_id = :titleId")
+  fun getDhikr(titleId: Int): List<Dhikr>
 
 }

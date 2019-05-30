@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="dazData"
-            type="com.elshadsm.muslim.hisnul.models.DazData" />
+            name="dhikr"
+            type="com.elshadsm.muslim.hisnul.database.Dhikr" />
     </data>
 
     <FrameLayout
@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin"
                     android:layout_marginRight="@dimen/margin"
-                    android:text="@{dazData.arabic}"
+                    android:text="@{dhikr.arabic}"
                     android:textSize="@dimen/arabic_text_size"
                     android:fontFamily="@font/uthman_tn_1_ver_10" />
 
@@ -56,7 +56,7 @@
                         android:id="@+id/compiled"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{dazData.compiled}"
+                        android:text="@{dhikr.compiled}"
                         android:textSize="@dimen/compiled_text_size"
                         android:layout_marginStart="@dimen/margin" />
                 </LinearLayout>
@@ -80,7 +80,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin"
-                        android:text="@{dazData.translation}"
+                        android:text="@{dhikr.translation}"
                         android:textSize="@dimen/translation_text_size" />
                 </LinearLayout>
 
@@ -88,7 +88,7 @@
                     android:id="@+id/reference"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{dazData.reference}"
+                    android:text="@{dhikr.reference}"
                     android:textSize="@dimen/reference_text_size"
                     android:layout_marginLeft="@dimen/margin"
                     android:layout_marginTop="@dimen/margin_l"

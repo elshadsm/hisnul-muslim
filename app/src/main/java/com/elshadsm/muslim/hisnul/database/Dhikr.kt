@@ -1,5 +1,7 @@
 package com.elshadsm.muslim.hisnul.database
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -15,4 +17,36 @@ class Dhikr(
     val translation: String,
     val reference: String,
     @ColumnInfo(name = "title_id")
-    val titleId: Int)
+    val titleId: Int) : Parcelable {
+
+  constructor(parcel: Parcel) : this(
+      parcel.readInt(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readString(),
+      parcel.readInt())
+
+  override fun writeToParcel(parcel: Parcel, flags: Int) {
+    parcel.writeInt(_id)
+    parcel.writeString(arabic)
+    parcel.writeString(compiled)
+    parcel.writeString(translation)
+    parcel.writeString(reference)
+    parcel.writeInt(titleId)
+  }
+
+  override fun describeContents(): Int {
+    return 0
+  }
+
+  companion object CREATOR : Parcelable.Creator<Dhikr> {
+    override fun createFromParcel(parcel: Parcel): Dhikr {
+      return Dhikr(parcel)
+    }
+
+    override fun newArray(size: Int): Array<Dhikr?> {
+      return arrayOfNulls(size)
+    }
+  }
+}

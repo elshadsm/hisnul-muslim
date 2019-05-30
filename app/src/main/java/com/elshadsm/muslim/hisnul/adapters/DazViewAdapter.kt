@@ -4,13 +4,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.elshadsm.muslim.hisnul.database.Dhikr
 import com.elshadsm.muslim.hisnul.fragments.DazViewFragment
 import com.elshadsm.muslim.hisnul.models.DAZ_PARCEABLE_NAME
 import com.elshadsm.muslim.hisnul.models.DazData
 
 class DazViewAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
 
-  private var dazDataList = listOf<DazData>()
+  private var dazDataList = listOf<Dhikr>()
 
   override fun getItem(position: Int): Fragment {
     val arguments = Bundle()
@@ -22,7 +23,7 @@ class DazViewAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapt
 
   override fun getCount(): Int = dazDataList.size
 
-  fun setData(data: List<DazData>) {
+  fun setData(data: List<Dhikr>) {
     dazDataList = data
     notifyDataSetChanged()
   }
