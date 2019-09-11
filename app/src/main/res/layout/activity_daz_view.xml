@@ -3,29 +3,22 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="dhikr"
-            type="com.elshadsm.muslim.hisnul.database.Dhikr" />
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/daz_view_activity_coordinator_layout"
+        android:id="@+id/dazViewActivityCoordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         tools:context=".activities.DazViewActivity">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar_layout"
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar_layout"
+                android:id="@+id/collapsingToolbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
@@ -33,15 +26,14 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/ctl_constraint_layout"
+                    android:id="@+id/ctlConstraintLayout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/extended_top_app_bar_height">
 
                     <TextView
-                        android:id="@+id/ctl_title"
+                        android:id="@+id/ctlTitle"
                         android:layout_width="@dimen/zero_size"
                         android:layout_height="44dp"
-                        android:text="dhikr.title"
                         android:textColor="@color/gray_100"
                         android:fontFamily="sans-serif-medium"
                         app:autoSizeTextType="uniform"
@@ -56,11 +48,11 @@
                         android:layout_marginStart="@dimen/margin_l"
                         android:layout_marginBottom="@dimen/margin_xl"
                         android:layout_marginEnd="@dimen/margin_l"
-                        app:layout_constraintEnd_toStartOf="@+id/ctl_pagination"
+                        app:layout_constraintEnd_toStartOf="@+id/ctlPagination"
                         />
 
                     <TextView
-                        android:id="@+id/ctl_pagination"
+                        android:id="@+id/ctlPagination"
                         android:layout_width="wrap_content"
                         android:layout_height="44dp"
                         android:textSize="@dimen/toolbar_pagination_text"
@@ -71,8 +63,8 @@
                         app:layout_collapseParallaxMultiplier="0.7"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="@dimen/margin_l"
-                        app:layout_constraintBottom_toBottomOf="@+id/ctl_title"
-                        app:layout_constraintTop_toTopOf="@+id/ctl_title" />
+                        app:layout_constraintBottom_toBottomOf="@+id/ctlTitle"
+                        app:layout_constraintTop_toTopOf="@+id/ctlTitle" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,15 +76,14 @@
                     app:popupTheme="@style/AppTheme">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/toolbar_constraint_layout"
+                        android:id="@+id/toolbarConstraintLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/toolbar_title"
+                            android:id="@+id/toolbarTitle"
                             android:layout_width="@dimen/zero_size"
                             android:layout_height="match_parent"
-                            android:text="dhikr.title"
                             android:textColor="@color/gray_100"
                             android:fontFamily="sans-serif-medium"
                             android:visibility="invisible"
@@ -102,7 +93,7 @@
                             app:autoSizeMaxTextSize="@dimen/toolbar_title_max_text_size"
                             app:autoSizeStepGranularity="@dimen/title_step_granularity"
                             android:gravity="center"
-                            app:layout_constraintEnd_toStartOf="@+id/toolbar_pagination"
+                            app:layout_constraintEnd_toStartOf="@+id/toolbarPagination"
                             android:layout_marginEnd="@dimen/margin_l"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintHorizontal_bias="1.0"
@@ -112,7 +103,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/toolbar_pagination"
+                            android:id="@+id/toolbarPagination"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/toolbar_pagination_text"
@@ -122,8 +113,8 @@
                             android:layout_gravity="end"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_marginEnd="@dimen/margin_l"
-                            app:layout_constraintTop_toTopOf="@+id/toolbar_title"
-                            app:layout_constraintBottom_toBottomOf="@+id/toolbar_title" />
+                            app:layout_constraintTop_toTopOf="@+id/toolbarTitle"
+                            app:layout_constraintBottom_toBottomOf="@+id/toolbarTitle" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -132,13 +123,13 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
+            android:id="@+id/viewPager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/download_play_fab"
+            android:id="@+id/downloadPlayFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

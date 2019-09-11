@@ -1,7 +1,5 @@
 package com.elshadsm.muslim.hisnul.activities
 
-import android.os.AsyncTask
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.AppBarLayout
@@ -9,28 +7,30 @@ import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import com.elshadsm.muslim.hisnul.BR
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.adapters.DazViewAdapter
-import com.elshadsm.muslim.hisnul.database.AppDataBase
 import com.elshadsm.muslim.hisnul.database.Dhikr
-import com.elshadsm.muslim.hisnul.databinding.ActivityDazViewBinding
-import com.elshadsm.muslim.hisnul.models.DAZ_ID_EXTRA_NAME
-import com.elshadsm.muslim.hisnul.models.DazData
+import com.elshadsm.muslim.hisnul.models.*
+import com.elshadsm.muslim.hisnul.services.GetDazFromDbTask
+import kotlinx.android.synthetic.main.activity_daz_view.*
+import java.lang.ref.WeakReference
 
 class DazViewActivity : AppCompatActivity() {
 
   private var menu: Menu? = null
-  private lateinit var binding: ActivityDazViewBinding
   private lateinit var pagerAdapter: DazViewAdapter
 
-  private lateinit var appDataBase: AppDataBase
+  fun updateData(dazDataList: List<Dhikr>) {
+    pagerAdapter.setData(dazDataList)
+    viewPager.adapter = pagerAdapter
+    updatePagination(1, pagerAdapter.count)
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     init()
-    applyConfiguration()
     registerEventHandlers()
+    applyConfiguration()
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -49,23 +49,24 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun init() {
-    binding = DataBindingUtil.setContentView(this, R.layout.activity_daz_view)
-    setSupportActionBar(binding.toolbar)
+    setContentView(R.layout.activity_daz_view)
+    setSupportActionBar(toolbar)
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
   }
 
   private fun applyConfiguration() {
-    if (intent.hasExtra(DAZ_ID_EXTRA_NAME)) {
-      val data = intent.extras
-      appDataBase = AppDataBase.getInstance(this)
-      val dazId = data?.getInt(DAZ_ID_EXTRA_NAME) ?: 1
-      pagerAdapter = DazViewAdapter(supportFragmentManager)
-      GetDazFromDbTask(this, dazId).execute()
+    intent.extras?.getInt(DAZ_ID_EXTRA_NAME)?.let {
+      GetDazFromDbTask(WeakReference(this), it).execute()
+    }
+    pagerAdapter = DazViewAdapter(supportFragmentManager)
+    intent.extras?.getString(DAZ_TITLE_EXTRA_NAME)?.let {
+      toolbarTitle.text = it
+      ctlTitle.text = it
     }
   }
 
   private fun registerEventHandlers() {
-    binding.appBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
+    appBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
       var isShow = false
       var scrollRange = -1
 
@@ -84,7 +85,7 @@ class DazViewActivity : AppCompatActivity() {
         }
       }
     })
-    binding.viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+    viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
       override fun onPageSelected(position: Int) = updatePagination(position + 1, pagerAdapter.count)
     })
   }
@@ -102,34 +103,16 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun updateTitleAndPagination(toolbarCollapsed: Boolean) {
-    binding.ctlTitle.visibility = if (toolbarCollapsed) View.INVISIBLE else View.VISIBLE
-    binding.ctlPagination.visibility = if (toolbarCollapsed) View.INVISIBLE else View.VISIBLE
-    binding.toolbarTitle.visibility = if (toolbarCollapsed) View.VISIBLE else View.INVISIBLE
-    binding.toolbarPagination.visibility = if (toolbarCollapsed) View.VISIBLE else View.INVISIBLE
+    ctlTitle.visibility = if (toolbarCollapsed) View.INVISIBLE else View.VISIBLE
+    ctlPagination.visibility = if (toolbarCollapsed) View.INVISIBLE else View.VISIBLE
+    toolbarTitle.visibility = if (toolbarCollapsed) View.VISIBLE else View.INVISIBLE
+    toolbarPagination.visibility = if (toolbarCollapsed) View.VISIBLE else View.INVISIBLE
   }
 
   private fun updatePagination(currentPage: Int, totalPage: Int) {
     val pagination = String.format(resources.getString(R.string.daz_view_pagination), currentPage, totalPage)
-    binding.toolbarPagination.text = pagination
-    binding.ctlPagination.text = pagination
-  }
-
-  companion object {
-
-    class GetDazFromDbTask(private val reference: DazViewActivity, private val titleId: Int) : AsyncTask<Void, Void, List<Dhikr>>() {
-
-      override fun doInBackground(vararg params: Void?): List<Dhikr> = reference.appDataBase.dhikrDao().getDhikr(1)
-
-      override fun onPostExecute(titleList: List<Dhikr>?) {
-        val dazDataList = reference.appDataBase.dhikrDao().getDhikr(titleId)
-        reference.pagerAdapter.setData(dazDataList)
-        reference.binding.viewPager.adapter = reference.pagerAdapter
-        reference.binding.setVariable(BR.dhikr, dazDataList[0])
-        reference.binding.executePendingBindings()
-        reference.updatePagination(1, reference.pagerAdapter.count)
-      }
-
-    }
+    ctlPagination.text = pagination
+    toolbarPagination.text = pagination
   }
 
 }

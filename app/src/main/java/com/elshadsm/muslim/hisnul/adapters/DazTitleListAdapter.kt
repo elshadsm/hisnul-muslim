@@ -12,6 +12,7 @@ import com.elshadsm.muslim.hisnul.activities.DazViewActivity
 import com.elshadsm.muslim.hisnul.database.AppDataBase
 import com.elshadsm.muslim.hisnul.database.Title
 import com.elshadsm.muslim.hisnul.models.DAZ_ID_EXTRA_NAME
+import com.elshadsm.muslim.hisnul.models.DAZ_TITLE_EXTRA_NAME
 import com.elshadsm.muslim.hisnul.services.GetTitleListFromDbTask
 
 class DazTitleListAdapter(private val context: Context) :
@@ -57,6 +58,7 @@ class DazTitleListAdapter(private val context: Context) :
     override fun onClick(view: View) {
       val intent = Intent(view.context, DazViewActivity::class.java)
       intent.putExtra(DAZ_ID_EXTRA_NAME, titleList[adapterPosition]._id)
+      intent.putExtra(DAZ_TITLE_EXTRA_NAME, titleList[adapterPosition].text)
       view.context.startActivity(intent)
     }
 
