@@ -1,29 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-
-        <variable
-            name="dhikr"
-            type="com.elshadsm.muslim.hisnul.database.Dhikr" />
-    </data>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/fragment_daz_view_nested_scroll_view"
+            android:id="@+id/fragmentDazViewNestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingLeft="@dimen/padding"
             android:paddingTop="@dimen/padding_l"
             android:paddingRight="@dimen/padding"
-            android:paddingBottom="@dimen/padding_l">
+            android:paddingBottom="@dimen/bottom_padding_when_floating_action_button_exist">
 
             <LinearLayout
-                android:id="@+id/liner_layout"
+                android:id="@+id/linerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -34,12 +27,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin"
                     android:layout_marginRight="@dimen/margin"
-                    android:text="@{dhikr.arabic}"
                     android:textSize="@dimen/arabic_text_size"
                     android:fontFamily="@font/uthman_tn_1_ver_10" />
 
                 <LinearLayout
-                    android:id="@+id/compiled_liner_layout"
+                    android:id="@+id/compiledLinerLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_l"
@@ -47,7 +39,7 @@
                     android:orientation="horizontal">
 
                     <View
-                        android:id="@+id/compiled_line"
+                        android:id="@+id/compiledLine"
                         android:layout_height="match_parent"
                         android:layout_width="@dimen/text_prefix_line_width"
                         android:background="@color/colorPrimaryDark" />
@@ -56,13 +48,12 @@
                         android:id="@+id/compiled"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{dhikr.compiled}"
                         android:textSize="@dimen/compiled_text_size"
                         android:layout_marginStart="@dimen/margin" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/translation_liner_layout"
+                    android:id="@+id/translationLinerLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_l"
@@ -70,7 +61,7 @@
                     android:orientation="horizontal">
 
                     <View
-                        android:id="@+id/translation_line"
+                        android:id="@+id/translationLine"
                         android:layout_height="match_parent"
                         android:layout_width="@dimen/text_prefix_line_width"
                         android:background="@color/colorPrimary" />
@@ -80,7 +71,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin"
-                        android:text="@{dhikr.translation}"
                         android:textSize="@dimen/translation_text_size" />
                 </LinearLayout>
 
@@ -88,7 +78,6 @@
                     android:id="@+id/reference"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{dhikr.reference}"
                     android:textSize="@dimen/reference_text_size"
                     android:layout_marginLeft="@dimen/margin"
                     android:layout_marginTop="@dimen/margin_l"

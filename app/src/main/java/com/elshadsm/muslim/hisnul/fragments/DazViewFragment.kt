@@ -1,17 +1,14 @@
 package com.elshadsm.muslim.hisnul.fragments
 
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.elshadsm.muslim.hisnul.BR
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.database.Dhikr
-import com.elshadsm.muslim.hisnul.databinding.FragmentDazViewBinding
 import com.elshadsm.muslim.hisnul.models.DAZ_PARCEABLE_NAME
-import com.elshadsm.muslim.hisnul.models.DazData
+import kotlinx.android.synthetic.main.fragment_daz_view.*
 
 class DazViewFragment : Fragment() {
 
@@ -26,14 +23,18 @@ class DazViewFragment : Fragment() {
     }
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                            savedInstanceState: Bundle?): View? {
-    val binding = DataBindingUtil.inflate<FragmentDazViewBinding>(inflater, R.layout.fragment_daz_view, container, false)
+  override fun onCreateView(inflater: LayoutInflater,
+                            container: ViewGroup?,
+                            savedInstanceState: Bundle?): View? =
+      inflater.inflate(R.layout.fragment_daz_view, container, false)
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     dhikr?.let {
-      binding.setVariable(BR.dhikr, dhikr)
-      binding.executePendingBindings()
+      arabic.text = it.arabic
+      compiled.text = it.compiled
+      translation.text = it.translation
+      reference.text = it.reference
     }
-    return binding.root
   }
 
 }

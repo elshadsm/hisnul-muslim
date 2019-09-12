@@ -9,6 +9,7 @@
     <dimen name="daz_view_activity_collapsing_toolbar_layout_margin_start">48dp</dimen>
     <dimen name="extended_top_app_bar_height">128dp</dimen>
     <dimen name="text_prefix_line_width">3dp</dimen>
+    <dimen name="bottom_padding_when_floating_action_button_exist">88dp</dimen>
 
     <dimen name="zero_size">0dp</dimen>
 

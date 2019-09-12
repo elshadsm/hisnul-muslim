@@ -17,20 +17,22 @@ import java.lang.ref.WeakReference
 
 class DazViewActivity : AppCompatActivity() {
 
+  private val paginationStartNumber = 1
+
   private var menu: Menu? = null
   private lateinit var pagerAdapter: DazViewAdapter
 
   fun updateData(dazDataList: List<Dhikr>) {
     pagerAdapter.setData(dazDataList)
     viewPager.adapter = pagerAdapter
-    updatePagination(1, pagerAdapter.count)
+    updatePagination(paginationStartNumber, pagerAdapter.count)
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     init()
-    registerEventHandlers()
     applyConfiguration()
+    registerEventHandlers()
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {

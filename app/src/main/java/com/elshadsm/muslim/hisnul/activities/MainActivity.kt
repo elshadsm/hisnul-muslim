@@ -14,6 +14,7 @@ import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.adapters.DazTitleListAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -26,8 +27,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
   }
 
   override fun onBackPressed() {
-    if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-      drawer_layout.closeDrawer(GravityCompat.START)
+    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+      drawerLayout.closeDrawer(GravityCompat.START)
     } else {
       super.onBackPressed()
     }
@@ -60,19 +61,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       R.id.nav_send -> {
       }
     }
-    drawer_layout.closeDrawer(GravityCompat.START)
+    drawerLayout.closeDrawer(GravityCompat.START)
     return true
   }
 
   private fun applyConfigurations() {
-    val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar,
+    val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
         R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-    drawer_layout.addDrawerListener(toggle)
+    drawerLayout.addDrawerListener(toggle)
     toggle.syncState()
-    nav_view.setNavigationItemSelectedListener(this)
-    val recyclerView = findViewById<RecyclerView>(R.id.daz_title_list_recycler_view)
-    recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-    recyclerView.adapter = DazTitleListAdapter(this)
+    navigationView.setNavigationItemSelectedListener(this)
+    dazTitleListRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+    dazTitleListRecyclerView.adapter = DazTitleListAdapter(this)
   }
 
   private fun registerEventHandlers() {
