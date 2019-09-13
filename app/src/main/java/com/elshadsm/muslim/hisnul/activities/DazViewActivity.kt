@@ -13,6 +13,7 @@ import com.elshadsm.muslim.hisnul.adapters.DazViewAdapter
 import com.elshadsm.muslim.hisnul.database.Dhikr
 import com.elshadsm.muslim.hisnul.models.*
 import com.elshadsm.muslim.hisnul.services.GetDazFromDbTask
+import com.elshadsm.muslim.hisnul.services.LocalCacheDataSourceFactory
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -118,10 +119,9 @@ class DazViewActivity : AppCompatActivity() {
 
   private fun applyExoPlayerConfiguration(savedInstanceState: Bundle?) {
     audioLastPosition = C.TIME_UNSET
-    audioPlayed = true
     savedInstanceState?.let {
       audioLastPosition = it.getLong(PLAYER_POSITION_KEY, C.TIME_UNSET)
-      audioPlayed = it.getBoolean(PLAYER_STATUS_KEY, true)
+      audioPlayed = it.getBoolean(PLAYER_STATUS_KEY, false)
     }
   }
 
@@ -193,8 +193,7 @@ class DazViewActivity : AppCompatActivity() {
 
   private fun buildMediaSource(): MediaSource {
     val mediaUri = Uri.parse("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
-    val dataSourceFactory = DefaultDataSourceFactory(this,
-        Util.getUserAgent(this, getString(R.string.app_name)))
+    val dataSourceFactory = LocalCacheDataSourceFactory(this)
     return ExtractorMediaSource
         .Factory(dataSourceFactory)
         .createMediaSource(mediaUri)
