@@ -135,5 +135,12 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/margin_l"
             app:srcCompat="@drawable/ic_file_download_white_24dp" />
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/audioPlayerView"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            app:show_timeout="0"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

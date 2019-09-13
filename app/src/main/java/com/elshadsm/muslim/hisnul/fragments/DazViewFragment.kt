@@ -17,9 +17,7 @@ class DazViewFragment : Fragment() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     arguments?.let {
-      if (it.containsKey(DAZ_PARCEABLE_NAME)) {
-        dhikr = it.getParcelable(DAZ_PARCEABLE_NAME)
-      }
+      dhikr = it.getParcelable(DAZ_PARCEABLE_NAME)
     }
   }
 
