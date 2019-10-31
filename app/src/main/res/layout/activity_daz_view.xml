@@ -129,18 +129,19 @@
             android:layout_height="match_parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/downloadPlayFab"
+            android:id="@+id/playFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/margin_l"
-            app:srcCompat="@drawable/ic_file_download_white_24dp" />
+            app:srcCompat="@drawable/exo_icon_play" />
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/audioPlayerView"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_gravity="bottom"
-            app:show_timeout="0"/>
+            app:show_timeout="0"
+            android:visibility="gone"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

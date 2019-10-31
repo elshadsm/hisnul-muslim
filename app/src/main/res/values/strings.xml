@@ -10,6 +10,15 @@
     <string name="action_bookmark">Bookmark</string>
     <string name="action_share">Share</string>
     <string name="daz_view_pagination">%1$d/%2$d</string>
+    <string name="permission_manager_go_to_settings_message">You have denied some permissions to the app. Please allow all permissions at [Setting] > [Permissions] screen</string>
+    <string name="permission_manager_go_to_settings_label">Go to Settings</string>
+    <string name="permission_manager_explanation_message">This app needs "%s" permissions to work without any issues and problems.</string>
+    <string name="permission_manager_explanation_label">Yes, Grant permissions</string>
+    <string name="permission_manager_dialog_negative_button">No, Exit app</string>
+    <string name="permission_name_internet">Internet</string>
+    <string name="permission_name_network_state">Network</string>
+    <string name="permission_name_write_external_storage">External Storage</string>
+    <string name="permission_name_read_external_storage">Internal Storage</string>
 
     <string name="space">\u0020</string>
     <string name="empty" />
