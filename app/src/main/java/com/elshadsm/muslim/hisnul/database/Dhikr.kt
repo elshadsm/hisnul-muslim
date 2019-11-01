@@ -16,11 +16,13 @@ class Dhikr(
     val compiled: String,
     val translation: String,
     val reference: String,
+    val audio: String?,
     @ColumnInfo(name = "title_id")
     val titleId: Int) : Parcelable {
 
   constructor(parcel: Parcel) : this(
       parcel.readInt(),
+      parcel.readString(),
       parcel.readString(),
       parcel.readString(),
       parcel.readString(),
@@ -33,6 +35,7 @@ class Dhikr(
     parcel.writeString(compiled)
     parcel.writeString(translation)
     parcel.writeString(reference)
+    parcel.writeString(audio)
     parcel.writeInt(titleId)
   }
 
@@ -49,4 +52,5 @@ class Dhikr(
       return arrayOfNulls(size)
     }
   }
+
 }

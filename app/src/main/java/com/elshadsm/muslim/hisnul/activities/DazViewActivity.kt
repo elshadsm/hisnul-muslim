@@ -21,7 +21,6 @@ import com.elshadsm.muslim.hisnul.models.*
 import com.elshadsm.muslim.hisnul.services.GetDazFromDbTask
 import com.elshadsm.muslim.hisnul.services.LocalCacheDataSourceFactory
 import com.elshadsm.muslim.hisnul.services.PermissionsManager
-import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -36,19 +35,18 @@ class DazViewActivity : AppCompatActivity() {
 
   private val paginationStartNumber = 1
   private var downloadId: Long = -1
+  private lateinit var currentDhikr: Dhikr
 
   private var menu: Menu? = null
   private var exoPlayer: SimpleExoPlayer? = null
-  private var audioLastPosition: Long = 0
-  private var audioPlayed: Boolean = true
-  private lateinit var pagerAdapter: DazViewAdapter
-  private lateinit var onComplete: BroadcastReceiver;
   private val permissionsManager = PermissionsManager(this)
+  private lateinit var pagerAdapter: DazViewAdapter
+  private lateinit var onAudioComplete: BroadcastReceiver
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     initializeUi()
-    applyConfiguration(savedInstanceState)
+    applyConfiguration()
     registerEventHandlers()
   }
 
@@ -67,28 +65,15 @@ class DazViewActivity : AppCompatActivity() {
     return super.onOptionsItemSelected(item)
   }
 
-  override fun onSaveInstanceState(outState: Bundle) {
-    outState.putLong(PLAYER_POSITION_KEY, audioLastPosition)
-    outState.putBoolean(PLAYER_STATUS_KEY, audioPlayed)
-    super.onSaveInstanceState(outState)
-  }
-
   override fun onStart() {
     super.onStart()
-//    initializeExoPlayer()
+    initializeExoPlayer()
   }
 
   override fun onResume() {
     super.onResume()
     if (exoPlayer == null) {
-//      initializeExoPlayer()
-    }
-  }
-
-  override fun onPause() {
-    super.onPause()
-    exoPlayer?.let {
-      audioLastPosition = it.currentPosition
+      initializeExoPlayer()
     }
   }
 
@@ -99,7 +84,7 @@ class DazViewActivity : AppCompatActivity() {
 
   override fun onDestroy() {
     super.onDestroy()
-    unregisterReceiver(onComplete)
+    unregisterReceiver(onAudioComplete)
     releaseExoPlayer()
   }
 
@@ -119,7 +104,7 @@ class DazViewActivity : AppCompatActivity() {
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
   }
 
-  private fun applyConfiguration(savedInstanceState: Bundle?) {
+  private fun applyConfiguration() {
     intent.extras?.getInt(DAZ_ID_EXTRA_NAME)?.let {
       GetDazFromDbTask(WeakReference(this), it).execute()
     }
@@ -128,55 +113,15 @@ class DazViewActivity : AppCompatActivity() {
       toolbarTitle.text = it
       ctlTitle.text = it
     }
-    applyExoPlayerConfiguration(savedInstanceState)
     permissionsManager.start()
   }
 
-  private fun applyExoPlayerConfiguration(savedInstanceState: Bundle?) {
-    audioLastPosition = C.TIME_UNSET
-    savedInstanceState?.let {
-      audioLastPosition = it.getLong(PLAYER_POSITION_KEY, C.TIME_UNSET)
-      audioPlayed = it.getBoolean(PLAYER_STATUS_KEY, false)
-    }
-  }
-
   private fun registerEventHandlers() {
-    appBarLayout.addOnOffsetChangedListener(object : AppBarLayout.OnOffsetChangedListener {
-      var isShow = false
-      var scrollRange = -1
-
-      override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-        if (scrollRange == -1) {
-          scrollRange = appBarLayout.totalScrollRange
-        }
-        if (scrollRange + verticalOffset == 0) {
-          hideActions()
-          updateTitleAndPagination(true)
-          isShow = true
-        } else if (isShow) {
-          showActions()
-          updateTitleAndPagination(false)
-          isShow = false
-        }
-      }
-    })
-    viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-      override fun onPageSelected(position: Int) = updatePagination(position + 1, pagerAdapter.count)
-    })
-    onComplete = object : BroadcastReceiver() {
-      override fun onReceive(context: Context, intent: Intent) {
-        val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-        if (downloadId == id) {
-          initializeExoPlayer()
-          audioPlayerView.visibility = View.VISIBLE
-          playFab.visibility = View.INVISIBLE
-        }
-      }
-    }
-    registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-    playFab.setOnClickListener {
-      downloadAudio()
-    }
+    appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener())
+    viewPager.addOnPageChangeListener(SimpleOnPageChangeListener())
+    onAudioComplete = DownloadCompleteBroadcastReceiver()
+    registerReceiver(onAudioComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    playFab.setOnClickListener(PlayFabOnClickListener())
   }
 
   private fun hideActions() {
@@ -202,20 +147,15 @@ class DazViewActivity : AppCompatActivity() {
     val pagination = String.format(resources.getString(R.string.daz_view_pagination), currentPage, totalPage)
     ctlPagination.text = pagination
     toolbarPagination.text = pagination
-  }
-
-  private fun downloadAudio() {
-    val url = "https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3"
-    val uri = Uri.parse(url)
-    val request = DownloadManager.Request(uri)
-    request.setTitle("GadgetSaint Downloading " + "test.mp3")
-    request.setDescription("Downloading " + "test.mp3")
-    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-    request.setDestinationInExternalPublicDir("/$MEDIA_DIRECTORY", "test.mp3")
-    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-    request.setAllowedOverRoaming(false)
-    request.setVisibleInDownloadsUi(true)
-    downloadId = (getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).enqueue(request)
+    currentDhikr = pagerAdapter.getDataAt(currentPage)
+    currentDhikr.audio?.let {
+      playFab.visibility = View.VISIBLE
+      val path = getAudioPath(it)
+      val icon = if (checkFileExists(path)) R.drawable.exo_controls_play else R.drawable.ic_file_download_white_24dp
+      playFab.setImageResource(icon)
+    } ?: run {
+      playFab.visibility = View.INVISIBLE
+    }
   }
 
   private fun initializeExoPlayer() {
@@ -226,27 +166,10 @@ class DazViewActivity : AppCompatActivity() {
     val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
     exoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
     audioPlayerView.player = exoPlayer
-    val mediaSource = buildMediaSource()
-    exoPlayer?.apply {
-      prepare(mediaSource)
-      seekTo(audioLastPosition)
-      playWhenReady = audioPlayed
-    }
-  }
-
-  private fun buildMediaSource(): MediaSource {
-    val directory = Environment.getExternalStoragePublicDirectory(MEDIA_DIRECTORY).toString() + File.separator + "test.mp3"
-    checkFileExists(directory)
-    val mediaUri = Uri.parse(directory)
-    val dataSourceFactory = LocalCacheDataSourceFactory(this)
-    return ExtractorMediaSource
-        .Factory(dataSourceFactory)
-        .createMediaSource(mediaUri)
   }
 
   private fun releaseExoPlayer() {
     exoPlayer?.let {
-      audioPlayed = it.playWhenReady
       it.stop()
       it.release()
     }
@@ -254,5 +177,87 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun checkFileExists(path: String) = File(path).exists()
+
+  private fun getAudioPath(audio: String) =
+      Environment.getExternalStoragePublicDirectory(AUDIO_DIRECTORY).toString() + File.separator + audio + ".mp3"
+
+  private fun downloadAudio(audio: String) {
+    val uri = Uri.parse("$AUDIO_URL_PREFIX$audio.mp3")
+    val request = DownloadManager.Request(uri)
+    request.setTitle("Downloading $audio.mp3")
+    request.setDescription("Downloading $audio.mp3 file to the external public directory")
+    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+    request.setDestinationInExternalPublicDir("/$AUDIO_DIRECTORY", "$audio.mp3")
+    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+    request.setAllowedOverRoaming(false)
+    request.setVisibleInDownloadsUi(true)
+    downloadId = (getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).enqueue(request)
+  }
+
+  private fun playAudio() {
+    val mediaSource = buildMediaSource()
+    exoPlayer?.apply {
+      prepare(mediaSource)
+      seekTo(0)
+      playWhenReady = true
+    }
+  }
+
+  private fun buildMediaSource(): MediaSource {
+    val path = getAudioPath(currentDhikr.audio ?: "")
+    val mediaUri = Uri.parse(path)
+    val dataSourceFactory = LocalCacheDataSourceFactory(this)
+    return ExtractorMediaSource
+        .Factory(dataSourceFactory)
+        .createMediaSource(mediaUri)
+  }
+
+  inner class OnOffsetChangedListener : AppBarLayout.OnOffsetChangedListener {
+    var isShow = false
+    var scrollRange = -1
+
+    override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+      if (scrollRange == -1) {
+        scrollRange = appBarLayout.totalScrollRange
+      }
+      if (scrollRange + verticalOffset == 0) {
+        hideActions()
+        updateTitleAndPagination(true)
+        isShow = true
+      } else if (isShow) {
+        showActions()
+        updateTitleAndPagination(false)
+        isShow = false
+      }
+    }
+  }
+
+  inner class SimpleOnPageChangeListener : ViewPager.SimpleOnPageChangeListener() {
+    override fun onPageSelected(position: Int) = updatePagination(position + 1, pagerAdapter.count)
+  }
+
+  inner class DownloadCompleteBroadcastReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+      val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+      if (downloadId == id) {
+        playFab.setImageResource(R.drawable.exo_controls_play)
+      }
+    }
+  }
+
+  inner class PlayFabOnClickListener : View.OnClickListener {
+    override fun onClick(v: View?) {
+      currentDhikr.audio?.let {
+        val path = getAudioPath(it)
+        if (checkFileExists(path)) {
+          playAudio()
+          audioPlayerView.visibility = View.VISIBLE
+          playFab.visibility = View.INVISIBLE
+        } else {
+          downloadAudio(it)
+        }
+      }
+    }
+  }
 
 }

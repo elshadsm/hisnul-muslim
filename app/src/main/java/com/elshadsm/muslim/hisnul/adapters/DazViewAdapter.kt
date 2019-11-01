@@ -28,4 +28,6 @@ class DazViewAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapt
     notifyDataSetChanged()
   }
 
+  fun getDataAt(index: Int) = dazDataList[index]
+
 }

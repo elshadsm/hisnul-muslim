@@ -134,6 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/margin_l"
+            android:visibility="visible"
             app:srcCompat="@drawable/exo_icon_play" />
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
