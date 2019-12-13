@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.adapters.DazViewAdapter
 import com.elshadsm.muslim.hisnul.database.Dhikr
@@ -43,6 +44,8 @@ class DazViewActivity : AppCompatActivity() {
   private lateinit var pagerAdapter: DazViewAdapter
   private lateinit var onAudioComplete: BroadcastReceiver
 
+  private var audioFeatureEnabled = true
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     initializeUi()
@@ -58,7 +61,10 @@ class DazViewActivity : AppCompatActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     when (item?.itemId) {
-      R.id.action_hide_or_display_play -> return true
+      R.id.action_hide_or_display_play -> {
+        hdeOrDisplayPlayAction()
+        return true
+      }
       R.id.action_bookmark -> return true
       R.id.action_share -> return true
     }
@@ -98,6 +104,18 @@ class DazViewActivity : AppCompatActivity() {
     updatePagination(paginationStartNumber, pagerAdapter.count)
   }
 
+  fun hdeOrDisplayPlayAction() {
+    val menuItem = menu?.findItem(R.id.action_hide_or_display_play)
+    if (audioFeatureEnabled) {
+      playFab.hide()
+      menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_up_white_24dp)
+    } else {
+      playFab.show()
+      menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_off_white_24dp)
+    }
+    audioFeatureEnabled = !audioFeatureEnabled
+  }
+
   private fun initializeUi() {
     setContentView(R.layout.activity_daz_view)
     setSupportActionBar(toolbar)
@@ -108,7 +126,7 @@ class DazViewActivity : AppCompatActivity() {
     intent.extras?.getInt(DAZ_ID_EXTRA_NAME)?.let {
       GetDazFromDbTask(WeakReference(this), it).execute()
     }
-    pagerAdapter = DazViewAdapter(supportFragmentManager)
+    pagerAdapter = DazViewAdapter(supportFragmentManager, this)
     intent.extras?.getString(DAZ_TITLE_EXTRA_NAME)?.let {
       toolbarTitle.text = it
       ctlTitle.text = it

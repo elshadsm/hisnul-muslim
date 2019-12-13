@@ -13,7 +13,10 @@
             android:paddingLeft="@dimen/padding"
             android:paddingTop="@dimen/padding_l"
             android:paddingRight="@dimen/padding"
-            android:paddingBottom="@dimen/bottom_padding_when_floating_action_button_exist">
+            android:paddingBottom="@dimen/bottom_padding_when_floating_action_button_exist"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
             <LinearLayout
                 android:id="@+id/linerLayout"
