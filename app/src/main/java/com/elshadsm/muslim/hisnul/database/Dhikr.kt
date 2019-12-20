@@ -22,10 +22,10 @@ class Dhikr(
 
   constructor(parcel: Parcel) : this(
       parcel.readInt(),
-      parcel.readString(),
-      parcel.readString(),
-      parcel.readString(),
-      parcel.readString(),
+      parcel.readString() ?: "",
+      parcel.readString() ?: "",
+      parcel.readString() ?: "",
+      parcel.readString() ?: "",
       parcel.readString(),
       parcel.readInt())
 

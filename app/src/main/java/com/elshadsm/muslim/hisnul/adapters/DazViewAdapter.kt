@@ -18,7 +18,7 @@ class DazViewAdapter(fragmentManager: FragmentManager, dazViewActivity: DazViewA
   private val gestureListener = object : OnGestureListenerAdapter() {
 
     override fun onSingleTapUp(event: MotionEvent): Boolean {
-      dazViewActivity.hdeOrDisplayPlayAction()
+      dazViewActivity.hdeOrDisplayPlayOption()
       return true
     }
 
