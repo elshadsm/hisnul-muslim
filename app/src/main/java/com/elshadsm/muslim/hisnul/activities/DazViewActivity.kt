@@ -17,11 +17,10 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.adapters.DazViewAdapter
+import com.elshadsm.muslim.hisnul.database.Bookmark
 import com.elshadsm.muslim.hisnul.database.Dhikr
 import com.elshadsm.muslim.hisnul.models.*
-import com.elshadsm.muslim.hisnul.services.GetDazFromDbTask
-import com.elshadsm.muslim.hisnul.services.LocalCacheDataSourceFactory
-import com.elshadsm.muslim.hisnul.services.PermissionsManager
+import com.elshadsm.muslim.hisnul.services.*
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -34,9 +33,11 @@ import java.lang.ref.WeakReference
 
 class DazViewActivity : AppCompatActivity() {
 
-  private val paginationStartNumber = 1
+  private var titleId: Int = 0
+  private val paginationStartNumber = 0
   private var downloadId: Long = -1
   private lateinit var currentDhikr: Dhikr
+  private var bookmarkList: MutableList<Bookmark> = mutableListOf()
 
   private var menu: Menu? = null
   private var exoPlayer: SimpleExoPlayer? = null
@@ -56,16 +57,20 @@ class DazViewActivity : AppCompatActivity() {
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
     menuInflater.inflate(R.menu.daz_view_actions, menu)
     this.menu = menu
+    updateBookmarkOptionIcon()
     return true
   }
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     when (item?.itemId) {
       R.id.action_hide_or_display_play -> {
-        hdeOrDisplayPlayAction()
+        hdeOrDisplayPlayOption()
         return true
       }
-      R.id.action_bookmark -> return true
+      R.id.action_bookmark -> {
+        handleBookmarkOptionSelect()
+        return true
+      }
       R.id.action_share -> return true
     }
     return super.onOptionsItemSelected(item)
@@ -104,7 +109,12 @@ class DazViewActivity : AppCompatActivity() {
     updatePagination(paginationStartNumber, pagerAdapter.count)
   }
 
-  fun hdeOrDisplayPlayAction() {
+  fun updateBookmarkList(bookmarkList: MutableList<Bookmark>) {
+    this.bookmarkList = bookmarkList
+    updateBookmarkOptionIcon()
+  }
+
+  fun hdeOrDisplayPlayOption() {
     val menuItem = menu?.findItem(R.id.action_hide_or_display_play)
     if (audioFeatureEnabled) {
       playFab.hide()
@@ -124,7 +134,9 @@ class DazViewActivity : AppCompatActivity() {
 
   private fun applyConfiguration() {
     intent.extras?.getInt(DAZ_ID_EXTRA_NAME)?.let {
+      titleId = it
       GetDazFromDbTask(WeakReference(this), it).execute()
+      GetBookmarkFromDbTask(WeakReference(this), it).execute()
     }
     pagerAdapter = DazViewAdapter(supportFragmentManager, this)
     intent.extras?.getString(DAZ_TITLE_EXTRA_NAME)?.let {
@@ -140,6 +152,21 @@ class DazViewActivity : AppCompatActivity() {
     onAudioComplete = DownloadCompleteBroadcastReceiver()
     registerReceiver(onAudioComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     playFab.setOnClickListener(PlayFabOnClickListener())
+  }
+
+  private fun handleBookmarkOptionSelect() {
+    var bookmark = bookmarkList.firstOrNull { it.dhikrId == currentDhikr._id }
+    val operation: BookmarkOperation
+    if (bookmark == null) {
+      operation = BookmarkOperation.INSERT
+      bookmark = Bookmark(titleId = titleId, dhikrId = currentDhikr._id)
+      bookmarkList.add(bookmark)
+    } else {
+      operation = BookmarkOperation.DELETE
+      bookmarkList.removeIf { it.dhikrId == currentDhikr._id }
+    }
+    InsertOrUpdateBookmarkFromDbTask(WeakReference(this), bookmark, operation).execute()
+    updateBookmarkOptionIcon()
   }
 
   private fun hideActions() {
@@ -162,7 +189,7 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun updatePagination(currentPage: Int, totalPage: Int) {
-    val pagination = String.format(resources.getString(R.string.daz_view_pagination), currentPage, totalPage)
+    val pagination = String.format(resources.getString(R.string.daz_view_pagination), (currentPage + 1), totalPage)
     ctlPagination.text = pagination
     toolbarPagination.text = pagination
     currentDhikr = pagerAdapter.getDataAt(currentPage)
@@ -173,6 +200,16 @@ class DazViewActivity : AppCompatActivity() {
       playFab.setImageResource(icon)
     } ?: run {
       playFab.visibility = View.INVISIBLE
+    }
+    updateBookmarkOptionIcon()
+  }
+
+  private fun updateBookmarkOptionIcon() {
+    val menuItem = menu?.findItem(R.id.action_bookmark)
+    if (bookmarkList.any { it.dhikrId == currentDhikr._id }) {
+      menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_bookmark_white_24dp)
+    } else {
+      menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_bookmark_border_white_24dp)
     }
   }
 
@@ -251,7 +288,7 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   inner class SimpleOnPageChangeListener : ViewPager.SimpleOnPageChangeListener() {
-    override fun onPageSelected(position: Int) = updatePagination(position + 1, pagerAdapter.count)
+    override fun onPageSelected(position: Int) = updatePagination(position , pagerAdapter.count)
   }
 
   inner class DownloadCompleteBroadcastReceiver : BroadcastReceiver() {
