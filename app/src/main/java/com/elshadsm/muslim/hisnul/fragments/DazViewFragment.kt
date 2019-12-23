@@ -23,7 +23,7 @@ class DazViewFragment(gestureListener: OnGestureListenerAdapter) : Fragment() {
 
   override fun onCreateView(inflater: LayoutInflater,
                             container: ViewGroup?,
-                            savedInstanceState: Bundle?) = inflater.inflate(R.layout.fragment_daz_view, container, false)
+                            savedInstanceState: Bundle?): View = inflater.inflate(R.layout.fragment_daz_view, container, false)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     fragmentDazViewNestedScrollView.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }

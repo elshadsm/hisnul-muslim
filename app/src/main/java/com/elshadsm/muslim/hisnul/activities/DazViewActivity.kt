@@ -71,7 +71,10 @@ class DazViewActivity : AppCompatActivity() {
         handleBookmarkOptionSelect()
         return true
       }
-      R.id.action_share -> return true
+      R.id.action_share -> {
+        handleShareOptionSelect()
+        return true
+      }
     }
     return super.onOptionsItemSelected(item)
   }
@@ -167,6 +170,19 @@ class DazViewActivity : AppCompatActivity() {
     }
     InsertOrUpdateBookmarkFromDbTask(WeakReference(this), bookmark, operation).execute()
     updateBookmarkOptionIcon()
+  }
+
+  private fun handleShareOptionSelect() {
+    val body = getShareBody()
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.type = "text/plain"
+    intent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.share_option_title))
+    intent.putExtra(Intent.EXTRA_TEXT, body)
+    startActivity(Intent.createChooser(intent, resources.getString(R.string.action_share)))
+  }
+
+  private fun getShareBody(): String {
+    return "${currentDhikr.arabic}\n\n${currentDhikr.compiled}\n\n${currentDhikr.translation}\n\n${currentDhikr.reference}"
   }
 
   private fun hideActions() {
