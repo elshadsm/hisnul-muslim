@@ -2,23 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_hide_or_display_play"
+        android:id="@+id/option_hide_or_display_play"
         android:icon="@drawable/ic_volume_off_white_24dp"
         android:orderInCategory="100"
-        android:title="@string/action_hide_or_display_play"
+        android:title="@string/option_hide_or_display_play"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_bookmark"
+        android:id="@+id/option_bookmark"
         android:icon="@drawable/ic_bookmark_border_white_24dp"
         android:orderInCategory="101"
-        android:title="@string/action_bookmark"
+        android:title="@string/option_bookmark"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_share"
+        android:id="@+id/option_share"
         android:icon="@drawable/ic_share_white_24dp"
         android:orderInCategory="102"
-        android:title="@string/action_share"
+        android:title="@string/option_share"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/option_settings"
+        android:icon="@drawable/ic_settings_white_24dp"
+        android:orderInCategory="103"
+        android:title="@string/option_settings"
         app:showAsAction="ifRoom" />
 </menu>

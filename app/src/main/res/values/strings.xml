@@ -6,9 +6,10 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="action_hide_or_display_play">Hide or Display play</string>
-    <string name="action_bookmark">Bookmark</string>
-    <string name="action_share">Share</string>
+    <string name="option_hide_or_display_play">Hide or Display play</string>
+    <string name="option_bookmark">Bookmark</string>
+    <string name="option_share">Share</string>
+    <string name="option_settings">Settings</string>
     <string name="share_option_title">Zikri paylaş</string>
     <string name="daz_view_pagination">%1$d/%2$d</string>
     <string name="permission_manager_go_to_settings_message">You have denied some permissions to the app. Please allow all permissions at [Setting] > [Permissions] screen</string>

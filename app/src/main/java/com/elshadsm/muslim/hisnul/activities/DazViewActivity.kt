@@ -33,9 +33,9 @@ import java.lang.ref.WeakReference
 
 class DazViewActivity : AppCompatActivity() {
 
-  private var titleId: Int = 0
   private val paginationStartNumber = 0
-  private var downloadId: Long = -1
+
+  private var titleId: Int = 0
   private lateinit var currentDhikr: Dhikr
   private var bookmarkList: MutableList<Bookmark> = mutableListOf()
 
@@ -45,6 +45,7 @@ class DazViewActivity : AppCompatActivity() {
   private lateinit var pagerAdapter: DazViewAdapter
   private lateinit var onAudioComplete: BroadcastReceiver
 
+  private var downloadId: Long = -1
   private var audioFeatureEnabled = true
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,16 +64,19 @@ class DazViewActivity : AppCompatActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     when (item?.itemId) {
-      R.id.action_hide_or_display_play -> {
+      R.id.option_hide_or_display_play -> {
         hdeOrDisplayPlayOption()
         return true
       }
-      R.id.action_bookmark -> {
+      R.id.option_bookmark -> {
         handleBookmarkOptionSelect()
         return true
       }
-      R.id.action_share -> {
+      R.id.option_share -> {
         handleShareOptionSelect()
+        return true
+      }
+      R.id.option_settings -> {
         return true
       }
     }
@@ -118,7 +122,7 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   fun hdeOrDisplayPlayOption() {
-    val menuItem = menu?.findItem(R.id.action_hide_or_display_play)
+    val menuItem = menu?.findItem(R.id.option_hide_or_display_play)
     if (audioFeatureEnabled) {
       playFab.hide()
       menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_up_white_24dp)
@@ -178,7 +182,7 @@ class DazViewActivity : AppCompatActivity() {
     intent.type = "text/plain"
     intent.putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.share_option_title))
     intent.putExtra(Intent.EXTRA_TEXT, body)
-    startActivity(Intent.createChooser(intent, resources.getString(R.string.action_share)))
+    startActivity(Intent.createChooser(intent, resources.getString(R.string.option_share)))
   }
 
   private fun getShareBody(): String {
@@ -186,15 +190,13 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun hideActions() {
-    arrayOf(R.id.action_hide_or_display_play, R.id.action_bookmark, R.id.action_share).forEach {
-      menu?.findItem(it)?.isVisible = false
-    }
+    arrayOf(R.id.option_hide_or_display_play, R.id.option_bookmark, R.id.option_share, R.id.option_settings)
+        .forEach { menu?.findItem(it)?.isVisible = false }
   }
 
   private fun showActions() {
-    arrayOf(R.id.action_hide_or_display_play, R.id.action_bookmark, R.id.action_share).forEach {
-      menu?.findItem(it)?.isVisible = true
-    }
+    arrayOf(R.id.option_hide_or_display_play, R.id.option_bookmark, R.id.option_share, R.id.option_settings)
+        .forEach { menu?.findItem(it)?.isVisible = true }
   }
 
   private fun updateTitleAndPagination(toolbarCollapsed: Boolean) {
@@ -221,7 +223,7 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun updateBookmarkOptionIcon() {
-    val menuItem = menu?.findItem(R.id.action_bookmark)
+    val menuItem = menu?.findItem(R.id.option_bookmark)
     if (bookmarkList.any { it.dhikrId == currentDhikr._id }) {
       menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_bookmark_white_24dp)
     } else {
@@ -304,7 +306,7 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   inner class SimpleOnPageChangeListener : ViewPager.SimpleOnPageChangeListener() {
-    override fun onPageSelected(position: Int) = updatePagination(position , pagerAdapter.count)
+    override fun onPageSelected(position: Int) = updatePagination(position, pagerAdapter.count)
   }
 
   inner class DownloadCompleteBroadcastReceiver : BroadcastReceiver() {
