@@ -21,6 +21,7 @@
     <string name="permission_name_network_state">Network</string>
     <string name="permission_name_write_external_storage">External Storage</string>
     <string name="permission_name_read_external_storage">Internal Storage</string>
+    <string name="audio_player_close_content_description">Close audio player</string>
 
     <string name="space">\u0020</string>
     <string name="empty" />

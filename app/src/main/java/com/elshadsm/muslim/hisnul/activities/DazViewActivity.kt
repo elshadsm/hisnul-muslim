@@ -1,10 +1,15 @@
 package com.elshadsm.muslim.hisnul.activities
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Outline
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -14,11 +19,13 @@ import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewOutlineProvider
 import androidx.core.content.ContextCompat
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.adapters.DazViewAdapter
 import com.elshadsm.muslim.hisnul.database.Bookmark
 import com.elshadsm.muslim.hisnul.database.Dhikr
+import com.elshadsm.muslim.hisnul.ktx.toPixel
 import com.elshadsm.muslim.hisnul.models.*
 import com.elshadsm.muslim.hisnul.services.*
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -47,6 +54,9 @@ class DazViewActivity : AppCompatActivity() {
 
   private var downloadId: Long = -1
   private var audioFeatureEnabled = true
+  private var playerIsOpen = false
+  private var playerExpanded = true
+  private var isAudioSupported = true
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -59,13 +69,14 @@ class DazViewActivity : AppCompatActivity() {
     menuInflater.inflate(R.menu.daz_view_actions, menu)
     this.menu = menu
     updateBookmarkOptionIcon()
+    hideOrDisplayPlayOption()
     return true
   }
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     when (item?.itemId) {
       R.id.option_hide_or_display_play -> {
-        hdeOrDisplayPlayOption()
+        hideOrDisplayPlayOption()
         return true
       }
       R.id.option_bookmark -> {
@@ -121,14 +132,24 @@ class DazViewActivity : AppCompatActivity() {
     updateBookmarkOptionIcon()
   }
 
-  fun hdeOrDisplayPlayOption() {
+  fun hideOrDisplayPlayOption(tap: Boolean = false) {
     val menuItem = menu?.findItem(R.id.option_hide_or_display_play)
-    if (audioFeatureEnabled) {
-      playFab.hide()
-      menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_up_white_24dp)
-    } else {
-      playFab.show()
-      menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_off_white_24dp)
+    if (!isAudioSupported) return disableAudioFeature(menuItem)
+    when {
+      playerIsOpen -> {
+        if (!tap) {
+          closeAudioPlayerView()
+          menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_up_white_24dp)
+        }
+      }
+      audioFeatureEnabled -> {
+        playFab.hide()
+        menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_up_white_24dp)
+      }
+      else -> {
+        playFab.show()
+        menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_off_white_24dp)
+      }
     }
     audioFeatureEnabled = !audioFeatureEnabled
   }
@@ -151,6 +172,7 @@ class DazViewActivity : AppCompatActivity() {
       ctlTitle.text = it
     }
     permissionsManager.start()
+    applyAudioPlayerViewCloseViewConfiguration()
   }
 
   private fun registerEventHandlers() {
@@ -159,6 +181,14 @@ class DazViewActivity : AppCompatActivity() {
     onAudioComplete = DownloadCompleteBroadcastReceiver()
     registerReceiver(onAudioComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     playFab.setOnClickListener(PlayFabOnClickListener())
+    playerCloseView.setOnClickListener(AudioPlayerViewCloseOnClickListener())
+    playerExpandCollapseView.setOnClickListener(AudioPlayerViewExpandCollapseOnClickListener())
+  }
+
+  private fun disableAudioFeature(menuItem: MenuItem?) {
+    playFab.hide()
+    closeAudioPlayerView()
+    menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_up_white_24dp)
   }
 
   private fun handleBookmarkOptionSelect() {
@@ -212,12 +242,14 @@ class DazViewActivity : AppCompatActivity() {
     toolbarPagination.text = pagination
     currentDhikr = pagerAdapter.getDataAt(currentPage)
     currentDhikr.audio?.let {
-      playFab.visibility = View.VISIBLE
+      isAudioSupported = true
+      hideOrDisplayPlayOption()
       val path = getAudioPath(it)
       val icon = if (checkFileExists(path)) R.drawable.exo_controls_play else R.drawable.ic_file_download_white_24dp
       playFab.setImageResource(icon)
     } ?: run {
-      playFab.visibility = View.INVISIBLE
+      isAudioSupported = false
+      hideOrDisplayPlayOption()
     }
     updateBookmarkOptionIcon()
   }
@@ -238,7 +270,8 @@ class DazViewActivity : AppCompatActivity() {
     val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory()
     val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
     exoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
-    audioPlayerView.player = exoPlayer
+    playerView.player = exoPlayer
+    playerCollapsedView.player = exoPlayer
   }
 
   private fun releaseExoPlayer() {
@@ -285,6 +318,27 @@ class DazViewActivity : AppCompatActivity() {
         .createMediaSource(mediaUri)
   }
 
+  private fun applyAudioPlayerViewCloseViewConfiguration() {
+    listOf(playerCloseView, playerExpandCollapseView).forEach {
+      it.outlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View?, outline: Outline?) {
+          val radius = resources.getDimension(R.dimen.margin_s)
+          outline?.setRoundRect(0, 0, view?.width ?: 0, view?.height ?: 0, radius)
+        }
+      }
+      it.clipToOutline = true
+    }
+  }
+
+  private fun closeAudioPlayerView() {
+    playerView.visibility = View.GONE
+    playerCollapsedView.visibility = View.GONE
+    playerExpandCollapseView.visibility = View.GONE
+    playerCloseView.visibility = View.GONE
+    exoPlayer?.stop()
+    playerIsOpen = false
+  }
+
   inner class OnOffsetChangedListener : AppBarLayout.OnOffsetChangedListener {
     var isShow = false
     var scrollRange = -1
@@ -324,11 +378,52 @@ class DazViewActivity : AppCompatActivity() {
         val path = getAudioPath(it)
         if (checkFileExists(path)) {
           playAudio()
-          audioPlayerView.visibility = View.VISIBLE
+          playerView.visibility = View.VISIBLE
+          if (!playerExpanded) playerCollapsedView.visibility = View.VISIBLE
+          playerCloseView.visibility = View.VISIBLE
+          playerExpandCollapseView.visibility = View.VISIBLE
           playFab.visibility = View.INVISIBLE
+          playerIsOpen = true
         } else {
           downloadAudio(it)
         }
+      }
+    }
+  }
+
+  inner class AudioPlayerViewCloseOnClickListener : View.OnClickListener {
+    override fun onClick(v: View?) {
+      this@DazViewActivity.closeAudioPlayerView()
+      playFab.visibility = View.VISIBLE
+    }
+  }
+
+  inner class AudioPlayerViewExpandCollapseOnClickListener : View.OnClickListener {
+    override fun onClick(v: View?) {
+      ContextCompat.getDrawable(this@DazViewActivity, if (playerExpanded)
+        R.drawable.ic_expand_audio_white_24dp else R.drawable.ic_collapse_audio_white_24dp).let {
+        playerExpandCollapseViewImage.setImageDrawable(it)
+      }
+      if (!playerExpanded) playerCollapsedView.visibility = View.GONE
+      listOf(playerView, playerCloseView, playerExpandCollapseView).forEach { animateView(it) }
+      playerExpanded = !playerExpanded
+    }
+
+    private fun animateView(view: View){
+      val float = if (playerExpanded) 72f else 0f
+      ObjectAnimator.ofFloat(view, "translationY", float.toPixel(this@DazViewActivity)).apply {
+        var animatorSet: AnimatorSet? = null
+        if (view == playerView && playerExpanded) {
+          animatorSet = AnimatorSet()
+          animatorSet.play(this)
+          animatorSet.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+              super.onAnimationEnd(animation)
+              playerCollapsedView.visibility = View.VISIBLE
+            }
+          })
+        }
+        animatorSet?.start() ?: start()
       }
     }
   }

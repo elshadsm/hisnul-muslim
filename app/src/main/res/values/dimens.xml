@@ -9,7 +9,15 @@
     <dimen name="daz_view_activity_collapsing_toolbar_layout_margin_start">48dp</dimen>
     <dimen name="extended_top_app_bar_height">128dp</dimen>
     <dimen name="text_prefix_line_width">3dp</dimen>
-    <dimen name="bottom_padding_when_floating_action_button_exist">88dp</dimen>
+    <dimen name="bottom_padding_when_floating_action_button_exist">133dp</dimen>
+    <dimen name="audio_player_view_height">88dp</dimen>
+    <dimen name="audio_player_collapsed_view_height">16dp</dimen>
+    <dimen name="audio_player_view_close_view_bottom_margin">89dp</dimen>
+    <dimen name="player_expand_collapse_view_margin_end">64dp</dimen>
+    <dimen name="ctl_constraint_layout_title_height">44dp</dimen>
+    <dimen name="ctl_constraint_layout_pagination_height">44dp</dimen>
+
+    <dimen name="line_size">1dp</dimen>
 
     <dimen name="zero_size">0dp</dimen>
 
@@ -21,6 +29,9 @@
     <dimen name="padding_l">16dp</dimen>
     <dimen name="padding">8dp</dimen>
     <dimen name="padding_10">10dp</dimen>
+
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="icon_size_l">32dp</dimen>
 
     <dimen name="single_line_list_item_text">16sp</dimen>
     <dimen name="toolbar_pagination_text">20sp</dimen>
