@@ -13,6 +13,7 @@ import android.graphics.Outline
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.AppBarLayout
 import androidx.viewpager.widget.ViewPager
@@ -108,6 +109,10 @@ class DazViewActivity : AppCompatActivity() {
 
   override fun onStop() {
     super.onStop()
+    if (playerIsOpen) {
+      closeAudioPlayerView()
+      playFab.visibility = View.VISIBLE
+    }
     releaseExoPlayer()
   }
 
@@ -172,7 +177,7 @@ class DazViewActivity : AppCompatActivity() {
       ctlTitle.text = it
     }
     permissionsManager.start()
-    applyAudioPlayerViewCloseViewConfiguration()
+    applyPlayerOptionsConfiguration()
   }
 
   private fun registerEventHandlers() {
@@ -180,9 +185,9 @@ class DazViewActivity : AppCompatActivity() {
     viewPager.addOnPageChangeListener(SimpleOnPageChangeListener())
     onAudioComplete = DownloadCompleteBroadcastReceiver()
     registerReceiver(onAudioComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-    playFab.setOnClickListener(PlayFabOnClickListener())
-    playerCloseView.setOnClickListener(AudioPlayerViewCloseOnClickListener())
-    playerExpandCollapseView.setOnClickListener(AudioPlayerViewExpandCollapseOnClickListener())
+    playFab.setOnClickListener(PlayFabListener())
+    playerCloseView.setOnClickListener(PlayerCloseListener())
+    playerExpandCollapseView.setOnClickListener(PlayerExpandCollapseListener())
   }
 
   private fun disableAudioFeature(menuItem: MenuItem?) {
@@ -237,10 +242,15 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun updatePagination(currentPage: Int, totalPage: Int) {
-    val pagination = String.format(resources.getString(R.string.daz_view_pagination), (currentPage + 1), totalPage)
-    ctlPagination.text = pagination
-    toolbarPagination.text = pagination
+    val paginationText = String.format(resources.getString(R.string.daz_view_pagination), (currentPage + 1), totalPage)
+    ctlPagination.text = paginationText
+    toolbarPagination.text = paginationText
     currentDhikr = pagerAdapter.getDataAt(currentPage)
+    updatePaginationAudio()
+    updateBookmarkOptionIcon()
+  }
+
+  private fun updatePaginationAudio() {
     currentDhikr.audio?.let {
       isAudioSupported = true
       hideOrDisplayPlayOption()
@@ -251,7 +261,6 @@ class DazViewActivity : AppCompatActivity() {
       isAudioSupported = false
       hideOrDisplayPlayOption()
     }
-    updateBookmarkOptionIcon()
   }
 
   private fun updateBookmarkOptionIcon() {
@@ -264,9 +273,7 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun initializeExoPlayer() {
-    if (exoPlayer != null) {
-      return
-    }
+    if (exoPlayer != null) return
     val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory()
     val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
     exoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
@@ -287,38 +294,7 @@ class DazViewActivity : AppCompatActivity() {
   private fun getAudioPath(audio: String) =
       Environment.getExternalStoragePublicDirectory(AUDIO_DIRECTORY).toString() + File.separator + audio + ".mp3"
 
-  private fun downloadAudio(audio: String) {
-    val uri = Uri.parse("$AUDIO_URL_PREFIX$audio.mp3")
-    val request = DownloadManager.Request(uri)
-    request.setTitle("Downloading $audio.mp3")
-    request.setDescription("Downloading $audio.mp3 file to the external public directory")
-    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-    request.setDestinationInExternalPublicDir("/$AUDIO_DIRECTORY", "$audio.mp3")
-    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-    request.setAllowedOverRoaming(false)
-    request.setVisibleInDownloadsUi(true)
-    downloadId = (getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).enqueue(request)
-  }
-
-  private fun playAudio() {
-    val mediaSource = buildMediaSource()
-    exoPlayer?.apply {
-      prepare(mediaSource)
-      seekTo(0)
-      playWhenReady = true
-    }
-  }
-
-  private fun buildMediaSource(): MediaSource {
-    val path = getAudioPath(currentDhikr.audio ?: "")
-    val mediaUri = Uri.parse(path)
-    val dataSourceFactory = LocalCacheDataSourceFactory(this)
-    return ExtractorMediaSource
-        .Factory(dataSourceFactory)
-        .createMediaSource(mediaUri)
-  }
-
-  private fun applyAudioPlayerViewCloseViewConfiguration() {
+  private fun applyPlayerOptionsConfiguration() {
     listOf(playerCloseView, playerExpandCollapseView).forEach {
       it.outlineProvider = object : ViewOutlineProvider() {
         override fun getOutline(view: View?, outline: Outline?) {
@@ -364,68 +340,130 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   inner class DownloadCompleteBroadcastReceiver : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent) {
       val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
       if (downloadId == id) {
         playFab.setImageResource(R.drawable.exo_controls_play)
       }
     }
+
   }
 
-  inner class PlayFabOnClickListener : View.OnClickListener {
+  inner class PlayFabListener : View.OnClickListener {
+
     override fun onClick(v: View?) {
       currentDhikr.audio?.let {
         val path = getAudioPath(it)
         if (checkFileExists(path)) {
           playAudio()
-          playerView.visibility = View.VISIBLE
-          if (!playerExpanded) playerCollapsedView.visibility = View.VISIBLE
-          playerCloseView.visibility = View.VISIBLE
-          playerExpandCollapseView.visibility = View.VISIBLE
-          playFab.visibility = View.INVISIBLE
-          playerIsOpen = true
+          updatePlayerConfiguration()
         } else {
           downloadAudio(it)
         }
       }
     }
+
+    private fun playAudio() {
+      val mediaSource = buildMediaSource()
+      exoPlayer?.apply {
+        prepare(mediaSource)
+        seekTo(0)
+        playWhenReady = true
+      }
+    }
+
+    private fun updatePlayerConfiguration() {
+      playerView.visibility = View.VISIBLE
+      if (!playerExpanded) playerCollapsedView.visibility = View.VISIBLE
+      playerCloseView.visibility = View.VISIBLE
+      playerExpandCollapseView.visibility = View.VISIBLE
+      playFab.visibility = View.INVISIBLE
+      playerIsOpen = true
+    }
+
+    private fun buildMediaSource(): MediaSource {
+      val path = getAudioPath(currentDhikr.audio ?: "")
+      val mediaUri = Uri.parse(path)
+      val dataSourceFactory = LocalCacheDataSourceFactory(this@DazViewActivity)
+      return ExtractorMediaSource
+          .Factory(dataSourceFactory)
+          .createMediaSource(mediaUri)
+    }
+
+    private fun downloadAudio(audio: String) {
+      val uri = Uri.parse("$AUDIO_URL_PREFIX$audio.mp3")
+      val request = DownloadManager.Request(uri)
+      request.setTitle("Downloading $audio.mp3")
+      request.setDescription("Downloading $audio.mp3 file to the external public directory")
+      request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+      request.setDestinationInExternalPublicDir("/$AUDIO_DIRECTORY", "$audio.mp3")
+      request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+      request.setAllowedOverRoaming(false)
+      request.setVisibleInDownloadsUi(true)
+      downloadId = (getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).enqueue(request)
+    }
+
   }
 
-  inner class AudioPlayerViewCloseOnClickListener : View.OnClickListener {
+  inner class PlayerCloseListener : View.OnClickListener {
     override fun onClick(v: View?) {
       this@DazViewActivity.closeAudioPlayerView()
       playFab.visibility = View.VISIBLE
     }
   }
 
-  inner class AudioPlayerViewExpandCollapseOnClickListener : View.OnClickListener {
+  inner class PlayerExpandCollapseListener : View.OnClickListener {
+
     override fun onClick(v: View?) {
-      ContextCompat.getDrawable(this@DazViewActivity, if (playerExpanded)
-        R.drawable.ic_expand_audio_white_24dp else R.drawable.ic_collapse_audio_white_24dp).let {
-        playerExpandCollapseViewImage.setImageDrawable(it)
-      }
-      if (!playerExpanded) playerCollapsedView.visibility = View.GONE
-      listOf(playerView, playerCloseView, playerExpandCollapseView).forEach { animateView(it) }
       playerExpanded = !playerExpanded
+      if (playerExpanded) playerCollapsedView.visibility = View.GONE
+      listOf(playerView, playerCloseView, playerExpandCollapseView).forEach { animateView(it) }
     }
 
-    private fun animateView(view: View){
-      val float = if (playerExpanded) 72f else 0f
-      ObjectAnimator.ofFloat(view, "translationY", float.toPixel(this@DazViewActivity)).apply {
-        var animatorSet: AnimatorSet? = null
-        if (view == playerView && playerExpanded) {
-          animatorSet = AnimatorSet()
-          animatorSet.play(this)
-          animatorSet.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
-              super.onAnimationEnd(animation)
-              playerCollapsedView.visibility = View.VISIBLE
+    private fun animateView(view: View) {
+      var animatorSet: AnimatorSet? = null
+      val float = getDistance().toPixel(this@DazViewActivity)
+      ObjectAnimator
+          .ofFloat(view, "translationY", float)
+          .apply {
+            if (view == playerView) {
+              animatorSet = getAnimatorSet(this)
             }
-          })
+            animatorSet?.start() ?: start()
+          }
+    }
+
+    private fun getDistance(): Float {
+      val typedValue = TypedValue()
+      if (playerExpanded) {
+        resources.getValue(R.dimen.zero_float, typedValue, true)
+      } else {
+        resources.getValue(R.dimen.player_collapse_distance, typedValue, true)
+      }
+      return typedValue.float
+    }
+
+    private fun getAnimatorSet(objectAnimator: ObjectAnimator) = AnimatorSet().apply {
+      play(objectAnimator)
+      addListener(object : AnimatorListenerAdapter() {
+        override fun onAnimationEnd(animation: Animator?) {
+          super.onAnimationEnd(animation)
+          updatePlayerExpandCollapseIcon()
+          if (!playerExpanded) {
+            playerCollapsedView.visibility = View.VISIBLE
+          }
         }
-        animatorSet?.start() ?: start()
+      })
+    }
+
+    private fun updatePlayerExpandCollapseIcon() {
+      ContextCompat.getDrawable(this@DazViewActivity, if (playerExpanded)
+        R.drawable.ic_collapse_player_white_24dp else R.drawable.ic_expand_player_white_24dp).let {
+        playerExpandCollapseIcon.setImageDrawable(it)
       }
     }
+
   }
 
 }

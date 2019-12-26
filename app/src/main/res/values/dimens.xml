@@ -46,4 +46,7 @@
     <dimen name="reference_text_size">14sp</dimen>
 
     <integer name="daz_title_number_pad">3</integer>
+
+    <item name="player_collapse_distance" format="float" type="dimen">72.0</item>
+    <item name="zero_float" format="float" type="dimen">0.0</item>
 </resources>

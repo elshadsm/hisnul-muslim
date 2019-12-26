@@ -185,11 +185,11 @@
             android:visibility="gone">
 
             <ImageView
-                android:id="@+id/playerExpandCollapseViewImage"
+                android:id="@+id/playerExpandCollapseIcon"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:contentDescription="@string/audio_player_close_content_description"
-                app:srcCompat="@drawable/ic_collapse_audio_white_24dp" />
+                app:srcCompat="@drawable/ic_collapse_player_white_24dp" />
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
