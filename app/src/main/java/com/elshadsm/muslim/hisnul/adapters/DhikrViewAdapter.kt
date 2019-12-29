@@ -18,7 +18,7 @@ class DhikrViewAdapter(fragmentManager: FragmentManager, dhikrViewActivity: Dhik
   private val gestureListener = object : OnGestureListenerAdapter() {
 
     override fun onSingleTapUp(event: MotionEvent): Boolean {
-      dhikrViewActivity.hideOrDisplayPlayOption(true)
+      dhikrViewActivity.handleAudioOptionSelect(true)
       return true
     }
 

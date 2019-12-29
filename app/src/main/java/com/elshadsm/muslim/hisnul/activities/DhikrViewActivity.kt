@@ -1,9 +1,5 @@
 package com.elshadsm.muslim.hisnul.activities
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,7 +9,6 @@ import android.graphics.Outline
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.AppBarLayout
 import androidx.viewpager.widget.ViewPager
@@ -26,7 +21,6 @@ import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.adapters.DhikrViewAdapter
 import com.elshadsm.muslim.hisnul.database.Bookmark
 import com.elshadsm.muslim.hisnul.database.Dhikr
-import com.elshadsm.muslim.hisnul.ktx.toPixel
 import com.elshadsm.muslim.hisnul.models.*
 import com.elshadsm.muslim.hisnul.services.*
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -47,17 +41,15 @@ class DhikrViewActivity : AppCompatActivity() {
   private lateinit var currentDhikr: Dhikr
   private var bookmarkList: MutableList<Bookmark> = mutableListOf()
 
-  private var menu: Menu? = null
-  private var exoPlayer: SimpleExoPlayer? = null
+  var exoPlayer: SimpleExoPlayer? = null
+  var menu: Menu? = null
   private val permissionsManager = PermissionsManager(this)
   private lateinit var pagerAdapter: DhikrViewAdapter
   private lateinit var onAudioComplete: BroadcastReceiver
 
   private var downloadId: Long = -1
-  private var audioFeatureEnabled = true
-  private var playerIsOpen = false
-  private var playerExpanded = true
-  private var isAudioSupported = true
+
+  private lateinit var audioUiManager: AudioUiManager
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -70,14 +62,13 @@ class DhikrViewActivity : AppCompatActivity() {
     menuInflater.inflate(R.menu.dhikr_view_actions, menu)
     this.menu = menu
     updateBookmarkOptionIcon()
-    hideOrDisplayPlayOption()
     return true
   }
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     when (item?.itemId) {
-      R.id.option_hide_or_display_play -> {
-        hideOrDisplayPlayOption()
+      R.id.option_audio -> {
+        handleAudioOptionSelect()
         return true
       }
       R.id.option_bookmark -> {
@@ -109,9 +100,8 @@ class DhikrViewActivity : AppCompatActivity() {
 
   override fun onStop() {
     super.onStop()
-    if (playerIsOpen) {
-      closeAudioPlayerView()
-      playFab.visibility = View.VISIBLE
+    if (audioUiManager.isOpen()) {
+      audioUiManager.close()
     }
     releaseExoPlayer()
   }
@@ -137,26 +127,15 @@ class DhikrViewActivity : AppCompatActivity() {
     updateBookmarkOptionIcon()
   }
 
-  fun hideOrDisplayPlayOption(tap: Boolean = false) {
-    val menuItem = menu?.findItem(R.id.option_hide_or_display_play)
-    if (!isAudioSupported) return disableAudioFeature(menuItem)
+  fun handleAudioOptionSelect(tap: Boolean = false) {
+    if (!audioUiManager.supported) return audioUiManager.disable()
     when {
-      playerIsOpen -> {
-        if (!tap) {
-          closeAudioPlayerView()
-          menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_up_white_24dp)
-        }
+      audioUiManager.isOpen() -> {
+        if (!tap) audioUiManager.disable()
       }
-      audioFeatureEnabled -> {
-        playFab.hide()
-        menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_up_white_24dp)
-      }
-      else -> {
-        playFab.show()
-        menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_off_white_24dp)
-      }
+      audioUiManager.enabled -> audioUiManager.disable()
+      else -> audioUiManager.enable()
     }
-    audioFeatureEnabled = !audioFeatureEnabled
   }
 
   private fun initializeUi() {
@@ -178,6 +157,7 @@ class DhikrViewActivity : AppCompatActivity() {
     }
     permissionsManager.start()
     applyPlayerOptionsConfiguration()
+    audioUiManager = AudioUiManager(this)
   }
 
   private fun registerEventHandlers() {
@@ -187,13 +167,7 @@ class DhikrViewActivity : AppCompatActivity() {
     registerReceiver(onAudioComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     playFab.setOnClickListener(PlayFabListener())
     playerCloseView.setOnClickListener(PlayerCloseListener())
-    playerExpandCollapseView.setOnClickListener(PlayerExpandCollapseListener())
-  }
-
-  private fun disableAudioFeature(menuItem: MenuItem?) {
-    playFab.hide()
-    closeAudioPlayerView()
-    menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_volume_up_white_24dp)
+    playerTransformView.setOnClickListener(PlayerTransformListener())
   }
 
   private fun handleBookmarkOptionSelect() {
@@ -225,12 +199,12 @@ class DhikrViewActivity : AppCompatActivity() {
   }
 
   private fun hideActions() {
-    arrayOf(R.id.option_hide_or_display_play, R.id.option_bookmark, R.id.option_share, R.id.option_settings)
+    arrayOf(R.id.option_audio, R.id.option_bookmark, R.id.option_share, R.id.option_settings)
         .forEach { menu?.findItem(it)?.isVisible = false }
   }
 
   private fun showActions() {
-    arrayOf(R.id.option_hide_or_display_play, R.id.option_bookmark, R.id.option_share, R.id.option_settings)
+    arrayOf(R.id.option_audio, R.id.option_bookmark, R.id.option_share, R.id.option_settings)
         .forEach { menu?.findItem(it)?.isVisible = true }
   }
 
@@ -252,15 +226,14 @@ class DhikrViewActivity : AppCompatActivity() {
 
   private fun updatePaginationAudio() {
     currentDhikr.audio?.let {
-      isAudioSupported = true
-      hideOrDisplayPlayOption()
+      audioUiManager.supported = true
       val path = getAudioPath(it)
       val icon = if (checkFileExists(path)) R.drawable.exo_controls_play else R.drawable.ic_file_download_white_24dp
       playFab.setImageResource(icon)
     } ?: run {
-      isAudioSupported = false
-      hideOrDisplayPlayOption()
+      audioUiManager.supported = false
     }
+    audioUiManager.reset()
   }
 
   private fun updateBookmarkOptionIcon() {
@@ -295,7 +268,7 @@ class DhikrViewActivity : AppCompatActivity() {
       Environment.getExternalStoragePublicDirectory(AUDIO_DIRECTORY).toString() + File.separator + audio + ".mp3"
 
   private fun applyPlayerOptionsConfiguration() {
-    listOf(playerCloseView, playerExpandCollapseView).forEach {
+    listOf(playerCloseView, playerTransformView).forEach {
       it.outlineProvider = object : ViewOutlineProvider() {
         override fun getOutline(view: View?, outline: Outline?) {
           val radius = resources.getDimension(R.dimen.margin_s)
@@ -304,15 +277,6 @@ class DhikrViewActivity : AppCompatActivity() {
       }
       it.clipToOutline = true
     }
-  }
-
-  private fun closeAudioPlayerView() {
-    playerView.visibility = View.GONE
-    playerCollapsedView.visibility = View.GONE
-    playerExpandCollapseView.visibility = View.GONE
-    playerCloseView.visibility = View.GONE
-    exoPlayer?.stop()
-    playerIsOpen = false
   }
 
   inner class OnOffsetChangedListener : AppBarLayout.OnOffsetChangedListener {
@@ -357,7 +321,7 @@ class DhikrViewActivity : AppCompatActivity() {
         val path = getAudioPath(it)
         if (checkFileExists(path)) {
           playAudio()
-          updatePlayerConfiguration()
+          audioUiManager.open()
         } else {
           downloadAudio(it)
         }
@@ -371,15 +335,6 @@ class DhikrViewActivity : AppCompatActivity() {
         seekTo(0)
         playWhenReady = true
       }
-    }
-
-    private fun updatePlayerConfiguration() {
-      playerView.visibility = View.VISIBLE
-      if (!playerExpanded) playerCollapsedView.visibility = View.VISIBLE
-      playerCloseView.visibility = View.VISIBLE
-      playerExpandCollapseView.visibility = View.VISIBLE
-      playFab.visibility = View.INVISIBLE
-      playerIsOpen = true
     }
 
     private fun buildMediaSource(): MediaSource {
@@ -408,62 +363,14 @@ class DhikrViewActivity : AppCompatActivity() {
 
   inner class PlayerCloseListener : View.OnClickListener {
     override fun onClick(v: View?) {
-      this@DhikrViewActivity.closeAudioPlayerView()
-      playFab.visibility = View.VISIBLE
+      audioUiManager.close()
     }
   }
 
-  inner class PlayerExpandCollapseListener : View.OnClickListener {
-
+  inner class PlayerTransformListener : View.OnClickListener {
     override fun onClick(v: View?) {
-      playerExpanded = !playerExpanded
-      if (playerExpanded) playerCollapsedView.visibility = View.GONE
-      listOf(playerView, playerCloseView, playerExpandCollapseView).forEach { animateView(it) }
+      audioUiManager.transform()
     }
-
-    private fun animateView(view: View) {
-      var animatorSet: AnimatorSet? = null
-      val float = getDistance().toPixel(this@DhikrViewActivity)
-      ObjectAnimator
-          .ofFloat(view, "translationY", float)
-          .apply {
-            if (view == playerView) {
-              animatorSet = getAnimatorSet(this)
-            }
-            animatorSet?.start() ?: start()
-          }
-    }
-
-    private fun getDistance(): Float {
-      val typedValue = TypedValue()
-      if (playerExpanded) {
-        resources.getValue(R.dimen.zero_float, typedValue, true)
-      } else {
-        resources.getValue(R.dimen.player_collapse_distance, typedValue, true)
-      }
-      return typedValue.float
-    }
-
-    private fun getAnimatorSet(objectAnimator: ObjectAnimator) = AnimatorSet().apply {
-      play(objectAnimator)
-      addListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator?) {
-          super.onAnimationEnd(animation)
-          updatePlayerExpandCollapseIcon()
-          if (!playerExpanded) {
-            playerCollapsedView.visibility = View.VISIBLE
-          }
-        }
-      })
-    }
-
-    private fun updatePlayerExpandCollapseIcon() {
-      ContextCompat.getDrawable(this@DhikrViewActivity, if (playerExpanded)
-        R.drawable.ic_collapse_player_white_24dp else R.drawable.ic_expand_player_white_24dp).let {
-        playerExpandCollapseIcon.setImageDrawable(it)
-      }
-    }
-
   }
 
 }

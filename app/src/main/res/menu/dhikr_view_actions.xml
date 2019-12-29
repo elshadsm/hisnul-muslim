@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/option_hide_or_display_play"
+        android:id="@+id/option_audio"
         android:icon="@drawable/ic_volume_off_white_24dp"
         android:orderInCategory="100"
         android:title="@string/option_hide_or_display_play"

@@ -173,7 +173,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/playerExpandCollapseView"
+            android:id="@+id/playerTransformView"
             android:layout_width="@dimen/icon_size_l"
             android:layout_height="@dimen/icon_size_l"
             android:layout_gravity="bottom|end"
