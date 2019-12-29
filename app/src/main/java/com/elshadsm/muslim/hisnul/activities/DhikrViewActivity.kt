@@ -49,6 +49,7 @@ class DhikrViewActivity : AppCompatActivity() {
     menuInflater.inflate(R.menu.dhikr_view_actions, menu)
     this.menu = menu
     updateBookmarkOptionIcon()
+    audioUiManager.reset()
     return true
   }
 

@@ -30,10 +30,13 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
   }
 
   fun reset() {
+    val menuItem = activity.menu?.findItem(R.id.option_audio)
     if (supported && enabled) {
       switchToPlayState()
+      menuItem?.icon = ContextCompat.getDrawable(activity, R.drawable.ic_volume_off_white_24dp)
     } else {
       switchToHiddenState()
+      menuItem?.icon = ContextCompat.getDrawable(activity, R.drawable.ic_volume_up_white_24dp)
     }
     activity.audioManager.stop()
     restoreTransform()
