@@ -11,7 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.RecyclerView
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.adapters.DazTitleListAdapter
+import com.elshadsm.muslim.hisnul.adapters.DhikrTitleListAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -71,8 +71,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     drawerLayout.addDrawerListener(toggle)
     toggle.syncState()
     navigationView.setNavigationItemSelectedListener(this)
-    dazTitleListRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-    dazTitleListRecyclerView.adapter = DazTitleListAdapter(this)
+    dhikrTitleListRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+    dhikrTitleListRecyclerView.adapter = DhikrTitleListAdapter(this)
   }
 
   private fun registerEventHandlers() {

@@ -3,7 +3,7 @@ package com.elshadsm.muslim.hisnul.models
 import android.os.Parcel
 import android.os.Parcelable
 
-class DazData(
+class DhikrData(
     var title: String? = "",
     var arabic: String? = "",
     var compiled: String? = "",
@@ -30,12 +30,12 @@ class DazData(
     return 0
   }
 
-  companion object CREATOR : Parcelable.Creator<DazData> {
-    override fun createFromParcel(parcel: Parcel): DazData {
-      return DazData(parcel)
+  companion object CREATOR : Parcelable.Creator<DhikrData> {
+    override fun createFromParcel(parcel: Parcel): DhikrData {
+      return DhikrData(parcel)
     }
 
-    override fun newArray(size: Int): Array<DazData?> {
+    override fun newArray(size: Int): Array<DhikrData?> {
       return arrayOfNulls(size)
     }
   }

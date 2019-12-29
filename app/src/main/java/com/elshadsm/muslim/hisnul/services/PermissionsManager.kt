@@ -11,9 +11,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.activities.DazViewActivity
+import com.elshadsm.muslim.hisnul.activities.DhikrViewActivity
 
-class PermissionsManager(private val activity: DazViewActivity) {
+class PermissionsManager(private val activity: DhikrViewActivity) {
 
   private val permissions = listOf(INTERNET, ACCESS_NETWORK_STATE, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE)
   private val deniedPermissions = mutableListOf<String>()

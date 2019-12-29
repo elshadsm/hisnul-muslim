@@ -1,13 +1,13 @@
 package com.elshadsm.muslim.hisnul.services
 
 import android.os.AsyncTask
-import com.elshadsm.muslim.hisnul.activities.DazViewActivity
+import com.elshadsm.muslim.hisnul.activities.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.database.AppDataBase
 import com.elshadsm.muslim.hisnul.database.Bookmark
 import com.elshadsm.muslim.hisnul.models.BookmarkOperation
 import java.lang.ref.WeakReference
 
-class InsertOrUpdateBookmarkFromDbTask(private val reference: WeakReference<DazViewActivity>,
+class InsertOrUpdateBookmarkFromDbTask(private val reference: WeakReference<DhikrViewActivity>,
                                        private val bookmark: Bookmark,
                                        private val bookmarkOperation: BookmarkOperation) :
     AsyncTask<Void, Void, Unit>() {

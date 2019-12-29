@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewOutlineProvider
 import androidx.core.content.ContextCompat
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.adapters.DazViewAdapter
+import com.elshadsm.muslim.hisnul.adapters.DhikrViewAdapter
 import com.elshadsm.muslim.hisnul.database.Bookmark
 import com.elshadsm.muslim.hisnul.database.Dhikr
 import com.elshadsm.muslim.hisnul.ktx.toPixel
@@ -35,11 +35,11 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import kotlinx.android.synthetic.main.activity_daz_view.*
+import kotlinx.android.synthetic.main.activity_dhikr_view.*
 import java.io.File
 import java.lang.ref.WeakReference
 
-class DazViewActivity : AppCompatActivity() {
+class DhikrViewActivity : AppCompatActivity() {
 
   private val paginationStartNumber = 0
 
@@ -50,7 +50,7 @@ class DazViewActivity : AppCompatActivity() {
   private var menu: Menu? = null
   private var exoPlayer: SimpleExoPlayer? = null
   private val permissionsManager = PermissionsManager(this)
-  private lateinit var pagerAdapter: DazViewAdapter
+  private lateinit var pagerAdapter: DhikrViewAdapter
   private lateinit var onAudioComplete: BroadcastReceiver
 
   private var downloadId: Long = -1
@@ -67,7 +67,7 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-    menuInflater.inflate(R.menu.daz_view_actions, menu)
+    menuInflater.inflate(R.menu.dhikr_view_actions, menu)
     this.menu = menu
     updateBookmarkOptionIcon()
     hideOrDisplayPlayOption()
@@ -126,8 +126,8 @@ class DazViewActivity : AppCompatActivity() {
     permissionsManager.handleRequestPermissionsResult(requestCode, permissions, grantResults)
   }
 
-  fun updateData(dazDataList: List<Dhikr>) {
-    pagerAdapter.setData(dazDataList)
+  fun updateData(dhikrDataList: List<Dhikr>) {
+    pagerAdapter.setData(dhikrDataList)
     viewPager.adapter = pagerAdapter
     updatePagination(paginationStartNumber, pagerAdapter.count)
   }
@@ -160,19 +160,19 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun initializeUi() {
-    setContentView(R.layout.activity_daz_view)
+    setContentView(R.layout.activity_dhikr_view)
     setSupportActionBar(toolbar)
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
   }
 
   private fun applyConfiguration() {
-    intent.extras?.getInt(DAZ_ID_EXTRA_NAME)?.let {
+    intent.extras?.getInt(DHIKR_ID_EXTRA_NAME)?.let {
       titleId = it
-      GetDazFromDbTask(WeakReference(this), it).execute()
+      GetDhikrFromDbTask(WeakReference(this), it).execute()
       GetBookmarkFromDbTask(WeakReference(this), it).execute()
     }
-    pagerAdapter = DazViewAdapter(supportFragmentManager, this)
-    intent.extras?.getString(DAZ_TITLE_EXTRA_NAME)?.let {
+    pagerAdapter = DhikrViewAdapter(supportFragmentManager, this)
+    intent.extras?.getString(DHIKR_TITLE_EXTRA_NAME)?.let {
       toolbarTitle.text = it
       ctlTitle.text = it
     }
@@ -242,7 +242,7 @@ class DazViewActivity : AppCompatActivity() {
   }
 
   private fun updatePagination(currentPage: Int, totalPage: Int) {
-    val paginationText = String.format(resources.getString(R.string.daz_view_pagination), (currentPage + 1), totalPage)
+    val paginationText = String.format(resources.getString(R.string.dhikr_view_pagination), (currentPage + 1), totalPage)
     ctlPagination.text = paginationText
     toolbarPagination.text = paginationText
     currentDhikr = pagerAdapter.getDataAt(currentPage)
@@ -385,7 +385,7 @@ class DazViewActivity : AppCompatActivity() {
     private fun buildMediaSource(): MediaSource {
       val path = getAudioPath(currentDhikr.audio ?: "")
       val mediaUri = Uri.parse(path)
-      val dataSourceFactory = LocalCacheDataSourceFactory(this@DazViewActivity)
+      val dataSourceFactory = LocalCacheDataSourceFactory(this@DhikrViewActivity)
       return ExtractorMediaSource
           .Factory(dataSourceFactory)
           .createMediaSource(mediaUri)
@@ -408,7 +408,7 @@ class DazViewActivity : AppCompatActivity() {
 
   inner class PlayerCloseListener : View.OnClickListener {
     override fun onClick(v: View?) {
-      this@DazViewActivity.closeAudioPlayerView()
+      this@DhikrViewActivity.closeAudioPlayerView()
       playFab.visibility = View.VISIBLE
     }
   }
@@ -423,7 +423,7 @@ class DazViewActivity : AppCompatActivity() {
 
     private fun animateView(view: View) {
       var animatorSet: AnimatorSet? = null
-      val float = getDistance().toPixel(this@DazViewActivity)
+      val float = getDistance().toPixel(this@DhikrViewActivity)
       ObjectAnimator
           .ofFloat(view, "translationY", float)
           .apply {
@@ -458,7 +458,7 @@ class DazViewActivity : AppCompatActivity() {
     }
 
     private fun updatePlayerExpandCollapseIcon() {
-      ContextCompat.getDrawable(this@DazViewActivity, if (playerExpanded)
+      ContextCompat.getDrawable(this@DhikrViewActivity, if (playerExpanded)
         R.drawable.ic_collapse_player_white_24dp else R.drawable.ic_expand_player_white_24dp).let {
         playerExpandCollapseIcon.setImageDrawable(it)
       }

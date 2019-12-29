@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.DazViewActivity"
+            android:name=".activities.DhikrViewActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".activities.MainActivity" />
     </application>
