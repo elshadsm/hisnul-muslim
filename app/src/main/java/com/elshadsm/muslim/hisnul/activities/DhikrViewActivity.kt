@@ -6,9 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Outline
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.AppBarLayout
 import androidx.viewpager.widget.ViewPager
@@ -23,33 +21,22 @@ import com.elshadsm.muslim.hisnul.database.Bookmark
 import com.elshadsm.muslim.hisnul.database.Dhikr
 import com.elshadsm.muslim.hisnul.models.*
 import com.elshadsm.muslim.hisnul.services.*
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import kotlinx.android.synthetic.main.activity_dhikr_view.*
-import java.io.File
 import java.lang.ref.WeakReference
 
 class DhikrViewActivity : AppCompatActivity() {
 
-  private val paginationStartNumber = 0
-
-  private var titleId: Int = 0
-  private lateinit var currentDhikr: Dhikr
-  private var bookmarkList: MutableList<Bookmark> = mutableListOf()
-
-  var exoPlayer: SimpleExoPlayer? = null
+  lateinit var audioUiManager: AudioUiManager
+  lateinit var audioManager: AudioManager
+  lateinit var currentDhikr: Dhikr
   var menu: Menu? = null
+
   private val permissionsManager = PermissionsManager(this)
-  private lateinit var pagerAdapter: DhikrViewAdapter
+  private val paginationStartNumber = 0
+  private var bookmarkList: MutableList<Bookmark> = mutableListOf()
+  private var titleId: Int = 0
   private lateinit var onAudioComplete: BroadcastReceiver
-
-  private var downloadId: Long = -1
-
-  private lateinit var audioUiManager: AudioUiManager
+  private lateinit var pagerAdapter: DhikrViewAdapter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -88,14 +75,12 @@ class DhikrViewActivity : AppCompatActivity() {
 
   override fun onStart() {
     super.onStart()
-    initializeExoPlayer()
+    audioManager.initializeExoPlayer()
   }
 
   override fun onResume() {
     super.onResume()
-    if (exoPlayer == null) {
-      initializeExoPlayer()
-    }
+    audioManager.ensureExoPlayer()
   }
 
   override fun onStop() {
@@ -103,13 +88,13 @@ class DhikrViewActivity : AppCompatActivity() {
     if (audioUiManager.isOpen()) {
       audioUiManager.close()
     }
-    releaseExoPlayer()
+    audioManager.releaseExoPlayer()
   }
 
   override fun onDestroy() {
     super.onDestroy()
     unregisterReceiver(onAudioComplete)
-    releaseExoPlayer()
+    audioManager.releaseExoPlayer()
   }
 
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -157,15 +142,16 @@ class DhikrViewActivity : AppCompatActivity() {
     }
     permissionsManager.start()
     applyPlayerOptionsConfiguration()
+    audioManager = AudioManager(this)
     audioUiManager = AudioUiManager(this)
   }
 
   private fun registerEventHandlers() {
     appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener())
-    viewPager.addOnPageChangeListener(SimpleOnPageChangeListener())
-    onAudioComplete = DownloadCompleteBroadcastReceiver()
+    viewPager.addOnPageChangeListener(PageChangeListener())
+    onAudioComplete = DownloadCompleteReceiver()
     registerReceiver(onAudioComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-    playFab.setOnClickListener(PlayFabListener())
+    playFab.setOnClickListener(PlayListener())
     playerCloseView.setOnClickListener(PlayerCloseListener())
     playerTransformView.setOnClickListener(PlayerTransformListener())
   }
@@ -227,8 +213,8 @@ class DhikrViewActivity : AppCompatActivity() {
   private fun updatePaginationAudio() {
     currentDhikr.audio?.let {
       audioUiManager.supported = true
-      val path = getAudioPath(it)
-      val icon = if (checkFileExists(path)) R.drawable.exo_controls_play else R.drawable.ic_file_download_white_24dp
+      val path = audioManager.getAudioPath(it)
+      val icon = if (audioManager.checkFileExists(path)) R.drawable.exo_controls_play else R.drawable.ic_file_download_white_24dp
       playFab.setImageResource(icon)
     } ?: run {
       audioUiManager.supported = false
@@ -244,28 +230,6 @@ class DhikrViewActivity : AppCompatActivity() {
       menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_bookmark_border_white_24dp)
     }
   }
-
-  private fun initializeExoPlayer() {
-    if (exoPlayer != null) return
-    val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory()
-    val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-    exoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
-    playerView.player = exoPlayer
-    playerCollapsedView.player = exoPlayer
-  }
-
-  private fun releaseExoPlayer() {
-    exoPlayer?.let {
-      it.stop()
-      it.release()
-    }
-    exoPlayer = null
-  }
-
-  private fun checkFileExists(path: String) = File(path).exists()
-
-  private fun getAudioPath(audio: String) =
-      Environment.getExternalStoragePublicDirectory(AUDIO_DIRECTORY).toString() + File.separator + audio + ".mp3"
 
   private fun applyPlayerOptionsConfiguration() {
     listOf(playerCloseView, playerTransformView).forEach {
@@ -299,66 +263,20 @@ class DhikrViewActivity : AppCompatActivity() {
     }
   }
 
-  inner class SimpleOnPageChangeListener : ViewPager.SimpleOnPageChangeListener() {
+  inner class PageChangeListener : ViewPager.SimpleOnPageChangeListener() {
     override fun onPageSelected(position: Int) = updatePagination(position, pagerAdapter.count)
   }
 
-  inner class DownloadCompleteBroadcastReceiver : BroadcastReceiver() {
-
+  inner class DownloadCompleteReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-      val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-      if (downloadId == id) {
-        playFab.setImageResource(R.drawable.exo_controls_play)
-      }
+      audioManager.onDownloadComplete(intent)
     }
-
   }
 
-  inner class PlayFabListener : View.OnClickListener {
-
+  inner class PlayListener : View.OnClickListener {
     override fun onClick(v: View?) {
-      currentDhikr.audio?.let {
-        val path = getAudioPath(it)
-        if (checkFileExists(path)) {
-          playAudio()
-          audioUiManager.open()
-        } else {
-          downloadAudio(it)
-        }
-      }
+      audioManager.play()
     }
-
-    private fun playAudio() {
-      val mediaSource = buildMediaSource()
-      exoPlayer?.apply {
-        prepare(mediaSource)
-        seekTo(0)
-        playWhenReady = true
-      }
-    }
-
-    private fun buildMediaSource(): MediaSource {
-      val path = getAudioPath(currentDhikr.audio ?: "")
-      val mediaUri = Uri.parse(path)
-      val dataSourceFactory = LocalCacheDataSourceFactory(this@DhikrViewActivity)
-      return ExtractorMediaSource
-          .Factory(dataSourceFactory)
-          .createMediaSource(mediaUri)
-    }
-
-    private fun downloadAudio(audio: String) {
-      val uri = Uri.parse("$AUDIO_URL_PREFIX$audio.mp3")
-      val request = DownloadManager.Request(uri)
-      request.setTitle("Downloading $audio.mp3")
-      request.setDescription("Downloading $audio.mp3 file to the external public directory")
-      request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-      request.setDestinationInExternalPublicDir("/$AUDIO_DIRECTORY", "$audio.mp3")
-      request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-      request.setAllowedOverRoaming(false)
-      request.setVisibleInDownloadsUi(true)
-      downloadId = (getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).enqueue(request)
-    }
-
   }
 
   inner class PlayerCloseListener : View.OnClickListener {

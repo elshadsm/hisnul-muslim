@@ -25,7 +25,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
 
   fun close() {
     switchToPlayState()
-    activity.exoPlayer?.stop()
+    activity.audioManager.stop()
     restoreTransform()
   }
 
@@ -35,7 +35,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     } else {
       switchToHiddenState()
     }
-    activity.exoPlayer?.stop()
+    activity.audioManager.stop()
     restoreTransform()
   }
 
@@ -51,7 +51,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     switchToHiddenState()
     val menuItem = activity.menu?.findItem(R.id.option_audio)
     menuItem?.icon = ContextCompat.getDrawable(activity, R.drawable.ic_volume_up_white_24dp)
-    activity.exoPlayer?.stop()
+    activity.audioManager.stop()
     restoreTransform()
   }
 
