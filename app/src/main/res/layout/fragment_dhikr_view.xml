@@ -13,7 +13,6 @@
             android:paddingLeft="@dimen/padding"
             android:paddingTop="@dimen/padding_l"
             android:paddingRight="@dimen/padding"
-            android:paddingBottom="@dimen/bottom_padding_when_floating_action_button_exist"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true">
@@ -85,6 +84,11 @@
                     android:layout_marginLeft="@dimen/margin"
                     android:layout_marginTop="@dimen/margin_l"
                     android:layout_marginRight="@dimen/margin" />
+
+                <Space
+                    android:id="@+id/space"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/zero_size" />
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>

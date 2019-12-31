@@ -11,34 +11,40 @@ import com.elshadsm.muslim.hisnul.fragments.DhikrViewFragment
 import com.elshadsm.muslim.hisnul.listeners.OnGestureListenerAdapter
 import com.elshadsm.muslim.hisnul.models.DHIKR_PARCEABLE_NAME
 
-class DhikrViewAdapter(fragmentManager: FragmentManager, dhikrViewActivity: DhikrViewActivity) : FragmentStatePagerAdapter(fragmentManager) {
+class DhikrViewAdapter(fragmentManager: FragmentManager, private val activity: DhikrViewActivity)
+  : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-  private var dhikrDataList = listOf<Dhikr>()
+  private var dhikrList = listOf<Dhikr>()
+  private var fragmentList = mutableListOf<Fragment>()
 
   private val gestureListener = object : OnGestureListenerAdapter() {
 
     override fun onSingleTapUp(event: MotionEvent): Boolean {
-      dhikrViewActivity.handleAudioOptionSelect(true)
+      activity.handleAudioOptionSelect(true)
       return true
     }
 
   }
 
-  override fun getItem(position: Int): Fragment {
-    val arguments = Bundle()
-    arguments.putParcelable(DHIKR_PARCEABLE_NAME, dhikrDataList[position])
-    val fragment = DhikrViewFragment(gestureListener)
-    fragment.arguments = arguments
-    return fragment
-  }
+  override fun getItem(position: Int) = fragmentList[position]
 
-  override fun getCount(): Int = dhikrDataList.size
+  override fun getCount(): Int = fragmentList.size
 
   fun setData(data: List<Dhikr>) {
-    dhikrDataList = data
+    dhikrList = data
+    dhikrList.forEach { createFragment(it) }
     notifyDataSetChanged()
   }
 
-  fun getDataAt(index: Int) = dhikrDataList[index]
+  fun getDataAt(index: Int) = dhikrList[index]
+
+  private fun createFragment(dhikr: Dhikr) {
+    val arguments = Bundle()
+    arguments.putParcelable(DHIKR_PARCEABLE_NAME, dhikr)
+    val fragment = DhikrViewFragment(gestureListener)
+    fragment.arguments = arguments
+    activity.events.addAudioUiListener(fragment)
+    fragmentList.add(fragment)
+  }
 
 }

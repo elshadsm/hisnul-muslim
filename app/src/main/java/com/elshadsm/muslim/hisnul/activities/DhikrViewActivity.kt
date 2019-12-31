@@ -19,6 +19,7 @@ import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.adapters.DhikrViewAdapter
 import com.elshadsm.muslim.hisnul.database.Bookmark
 import com.elshadsm.muslim.hisnul.database.Dhikr
+import com.elshadsm.muslim.hisnul.listeners.DhikrEvents
 import com.elshadsm.muslim.hisnul.models.*
 import com.elshadsm.muslim.hisnul.services.*
 import kotlinx.android.synthetic.main.activity_dhikr_view.*
@@ -29,6 +30,7 @@ class DhikrViewActivity : AppCompatActivity() {
   lateinit var audioUiManager: AudioUiManager
   lateinit var audioManager: AudioManager
   lateinit var currentDhikr: Dhikr
+  var currentPage: Int = 0
   var menu: Menu? = null
 
   private val permissionsManager = PermissionsManager(this)
@@ -37,6 +39,7 @@ class DhikrViewActivity : AppCompatActivity() {
   private var titleId: Int = 0
   private lateinit var onAudioComplete: BroadcastReceiver
   private lateinit var pagerAdapter: DhikrViewAdapter
+  val events = DhikrEvents()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -206,6 +209,7 @@ class DhikrViewActivity : AppCompatActivity() {
     val paginationText = String.format(resources.getString(R.string.dhikr_view_pagination), (currentPage + 1), totalPage)
     ctlPagination.text = paginationText
     toolbarPagination.text = paginationText
+    this.currentPage = currentPage
     currentDhikr = pagerAdapter.getDataAt(currentPage)
     updatePaginationAudio()
     updateBookmarkOptionIcon()

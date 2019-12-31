@@ -136,6 +136,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.playerCloseView.visibility = View.GONE
     activity.playFab.hide()
     activity.playFab.visibility = View.GONE
+    activity.events.notifyAudioUiStateChanged(state, activity.currentPage)
   }
 
   private fun switchToPlayState() {
@@ -146,6 +147,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.playerCloseView.visibility = View.GONE
     activity.playFab.show()
     activity.playFab.visibility = View.VISIBLE
+    activity.events.notifyAudioUiStateChanged(state, activity.currentPage)
   }
 
   private fun switchToExpandedState() {
@@ -156,6 +158,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.playerCloseView.visibility = View.VISIBLE
     activity.playFab.hide()
     activity.playFab.visibility = View.GONE
+    activity.events.notifyAudioUiStateChanged(state, activity.currentPage)
   }
 
   fun switchToCollapsedState() {
@@ -166,6 +169,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.playerCloseView.visibility = View.VISIBLE
     activity.playFab.hide()
     activity.playFab.visibility = View.GONE
+    activity.events.notifyAudioUiStateChanged(state, activity.currentPage)
   }
 
 }

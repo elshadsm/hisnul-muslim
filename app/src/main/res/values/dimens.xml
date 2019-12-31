@@ -9,13 +9,22 @@
     <dimen name="dhikr_view_activity_collapsing_toolbar_layout_margin_start">48dp</dimen>
     <dimen name="extended_top_app_bar_height">128dp</dimen>
     <dimen name="text_prefix_line_width">3dp</dimen>
-    <dimen name="bottom_padding_when_floating_action_button_exist">133dp</dimen>
     <dimen name="audio_player_view_height">88dp</dimen>
     <dimen name="audio_player_collapsed_view_height">16dp</dimen>
+    <!--  88dp player height + 1dp option padding  -->
     <dimen name="audio_player_view_close_view_bottom_margin">89dp</dimen>
     <dimen name="player_expand_collapse_view_margin_end">64dp</dimen>
     <dimen name="ctl_constraint_layout_title_height">44dp</dimen>
     <dimen name="ctl_constraint_layout_pagination_height">44dp</dimen>
+
+    <!--  16dp padding  -->
+    <dimen name="bottom_padding_in_hidden_state">16dp</dimen>
+    <!--  72dp fab height + 16dp padding  -->
+    <dimen name="bottom_padding_in_play_state">88dp</dimen>
+    <!--  88dp player height + 32dp option height + 1dp option padding + 16dp padding  -->
+    <dimen name="bottom_padding_in_expanded_state">137dp</dimen>
+    <!--  16dp collapsed player height + 32dp option height + 1dp option padding + 16dp padding  -->
+    <dimen name="bottom_padding_in_collapsed_state">65dp</dimen>
 
     <dimen name="line_size">1dp</dimen>
 
