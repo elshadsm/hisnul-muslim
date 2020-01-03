@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.services
+package com.elshadsm.muslim.hisnul.viewmodel.dhikrview
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -25,37 +25,27 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
 
   fun close() {
     switchToPlayState()
-    activity.audioManager.stop()
-    restoreTransform()
+    resetAudio()
   }
 
   fun reset() {
-    val menuItem = activity.menu?.findItem(R.id.option_audio)
     if (supported && enabled) {
       switchToPlayState()
-      menuItem?.icon = ContextCompat.getDrawable(activity, R.drawable.ic_volume_off_white_24dp)
     } else {
       switchToHiddenState()
-      menuItem?.icon = ContextCompat.getDrawable(activity, R.drawable.ic_volume_up_white_24dp)
     }
-    activity.audioManager.stop()
-    restoreTransform()
+    resetAudio()
   }
 
   fun enable() {
     enabled = true
     switchToPlayState()
-    val menuItem = activity.menu?.findItem(R.id.option_audio)
-    menuItem?.icon = ContextCompat.getDrawable(activity, R.drawable.ic_volume_off_white_24dp)
   }
 
   fun disable() {
     enabled = false
     switchToHiddenState()
-    val menuItem = activity.menu?.findItem(R.id.option_audio)
-    menuItem?.icon = ContextCompat.getDrawable(activity, R.drawable.ic_volume_up_white_24dp)
-    activity.audioManager.stop()
-    restoreTransform()
+    resetAudio()
   }
 
   fun isOpen() = (state == AudioUiState.EXPANDED || state == AudioUiState.COLLAPSED)
@@ -117,6 +107,11 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     }
   }
 
+  private fun resetAudio() {
+    activity.audioManager.stop()
+    restoreTransform()
+  }
+
   private fun restoreTransform() {
     val typedValue = TypedValue()
     activity.resources.getValue(R.dimen.zero_float, typedValue, true)
@@ -129,6 +124,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
   }
 
   private fun switchToHiddenState() {
+    disableAudioOption()
     state = AudioUiState.HIDDEN
     activity.playerView.visibility = View.GONE
     activity.playerCollapsedView.visibility = View.GONE
@@ -136,10 +132,11 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.playerCloseView.visibility = View.GONE
     activity.playFab.hide()
     activity.playFab.visibility = View.GONE
-    activity.events.notifyAudioUiStateChanged(state, activity.currentPage)
+    activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
   }
 
   private fun switchToPlayState() {
+    enableAudioOption()
     state = AudioUiState.PLAY
     activity.playerView.visibility = View.GONE
     activity.playerCollapsedView.visibility = View.GONE
@@ -147,7 +144,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.playerCloseView.visibility = View.GONE
     activity.playFab.show()
     activity.playFab.visibility = View.VISIBLE
-    activity.events.notifyAudioUiStateChanged(state, activity.currentPage)
+    activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
   }
 
   private fun switchToExpandedState() {
@@ -158,7 +155,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.playerCloseView.visibility = View.VISIBLE
     activity.playFab.hide()
     activity.playFab.visibility = View.GONE
-    activity.events.notifyAudioUiStateChanged(state, activity.currentPage)
+    activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
   }
 
   fun switchToCollapsedState() {
@@ -169,7 +166,17 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.playerCloseView.visibility = View.VISIBLE
     activity.playFab.hide()
     activity.playFab.visibility = View.GONE
-    activity.events.notifyAudioUiStateChanged(state, activity.currentPage)
+    activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
+  }
+
+  private fun enableAudioOption() {
+    val menuItem = activity.menu?.findItem(R.id.option_audio)
+    menuItem?.icon = ContextCompat.getDrawable(activity, R.drawable.ic_volume_off_white_24dp)
+  }
+
+  private fun disableAudioOption() {
+    val menuItem = activity.menu?.findItem(R.id.option_audio)
+    menuItem?.icon = ContextCompat.getDrawable(activity, R.drawable.ic_volume_up_white_24dp)
   }
 
 }

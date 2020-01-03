@@ -1,24 +1,24 @@
 package com.elshadsm.muslim.hisnul.services
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.AsyncTask
-import com.elshadsm.muslim.hisnul.activities.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.database.AppDataBase
 import com.elshadsm.muslim.hisnul.database.Dhikr
-import java.lang.ref.WeakReference
+import com.elshadsm.muslim.hisnul.viewmodel.dhikrview.DhikrViewModel
 
-class GetDhikrFromDbTask(private val reference: WeakReference<DhikrViewActivity>, private val titleId: Int) :
-    AsyncTask<Void, Void, List<Dhikr>>() {
+@SuppressLint("StaticFieldLeak")
+class GetDhikrFromDbTask(private val context: Context,
+                         private val viewModel: DhikrViewModel,
+                         private val titleId: Int) : AsyncTask<Void, Void, List<Dhikr>>() {
 
   override fun doInBackground(vararg params: Void?): List<Dhikr> {
-    reference.get()?.let {
-      val appDataBase = AppDataBase.getInstance(it)
-      return appDataBase.dhikrDao().getDhikr(titleId)
-    }
-    return listOf()
+    val appDataBase = AppDataBase.getInstance(context)
+    return appDataBase.dhikrDao().getDhikr(titleId)
   }
 
-  override fun onPostExecute(dhikrDataList: List<Dhikr>) {
-    reference.get()?.updateData(dhikrDataList)
+  override fun onPostExecute(dhikrList: List<Dhikr>) {
+    viewModel.dhikrList.value = dhikrList
   }
 
 }

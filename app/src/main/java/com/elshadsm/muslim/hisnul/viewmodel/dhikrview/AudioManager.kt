@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.services
+package com.elshadsm.muslim.hisnul.viewmodel.dhikrview
 
 import android.app.DownloadManager
 import android.content.Context
@@ -9,6 +9,7 @@ import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.activities.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.models.AUDIO_DIRECTORY
 import com.elshadsm.muslim.hisnul.models.AUDIO_URL_PREFIX
+import com.elshadsm.muslim.hisnul.services.LocalCacheDataSourceFactory
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -54,7 +55,7 @@ class AudioManager(private val activity: DhikrViewActivity) {
   }
 
   fun play() {
-    activity.currentDhikr.audio?.let {
+    activity.viewModel.currentDhikr?.audio?.let {
       val path = getAudioPath(it)
       if (checkFileExists(path)) {
         playAudio()
@@ -84,7 +85,7 @@ class AudioManager(private val activity: DhikrViewActivity) {
   }
 
   private fun buildMediaSource(): MediaSource {
-    val path = getAudioPath(activity.currentDhikr.audio ?: "")
+    val path = getAudioPath(activity.viewModel.currentDhikr?.audio ?: "")
     val mediaUri = Uri.parse(path)
     val dataSourceFactory = LocalCacheDataSourceFactory(activity)
     return ExtractorMediaSource

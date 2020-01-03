@@ -10,11 +10,11 @@ import com.elshadsm.muslim.hisnul.database.Dhikr
 import com.elshadsm.muslim.hisnul.fragments.DhikrViewFragment
 import com.elshadsm.muslim.hisnul.listeners.OnGestureListenerAdapter
 import com.elshadsm.muslim.hisnul.models.DHIKR_PARCEABLE_NAME
+import com.elshadsm.muslim.hisnul.viewmodel.dhikrview.DhikrViewModel
 
 class DhikrViewAdapter(fragmentManager: FragmentManager, private val activity: DhikrViewActivity)
   : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-  private var dhikrList = listOf<Dhikr>()
   private var fragmentList = mutableListOf<Fragment>()
 
   private val gestureListener = object : OnGestureListenerAdapter() {
@@ -30,13 +30,10 @@ class DhikrViewAdapter(fragmentManager: FragmentManager, private val activity: D
 
   override fun getCount(): Int = fragmentList.size
 
-  fun setData(data: List<Dhikr>) {
-    dhikrList = data
-    dhikrList.forEach { createFragment(it) }
+  fun createFragments(viewModel: DhikrViewModel) {
+    viewModel.dhikrList.value?.forEach { createFragment(it) }
     notifyDataSetChanged()
   }
-
-  fun getDataAt(index: Int) = dhikrList[index]
 
   private fun createFragment(dhikr: Dhikr) {
     val arguments = Bundle()
