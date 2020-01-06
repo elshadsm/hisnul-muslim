@@ -51,7 +51,7 @@ class DhikrViewActivity : AppCompatActivity() {
     menuInflater.inflate(R.menu.dhikr_view_actions, menu)
     this.menu = menu
     updateBookmarkOptionIcon()
-    audioUiManager.reset()
+    audioUiManager.init()
     return true
   }
 
@@ -169,20 +169,8 @@ class DhikrViewActivity : AppCompatActivity() {
     ctlPagination.text = paginationText
     toolbarPagination.text = paginationText
     viewModel.currentPage = currentPage
-    updatePaginationAudio()
-    updateBookmarkOptionIcon()
-  }
-
-  private fun updatePaginationAudio() {
-    viewModel.currentDhikr?.audio?.let {
-      audioUiManager.supported = true
-      val path = audioManager.getAudioPath(it)
-      val icon = if (audioManager.checkFileExists(path)) R.drawable.exo_controls_play else R.drawable.ic_file_download_white_24dp
-      playFab.setImageResource(icon)
-    } ?: run {
-      audioUiManager.supported = false
-    }
     audioUiManager.reset()
+    updateBookmarkOptionIcon()
   }
 
   private fun handleDhikrListUpdate() {

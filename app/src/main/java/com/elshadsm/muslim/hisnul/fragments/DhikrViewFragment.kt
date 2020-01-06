@@ -50,6 +50,7 @@ class DhikrViewFragment(gestureListener: OnGestureListenerAdapter) : Fragment(),
     val resources = this.activity?.resources
     return when (state) {
       HIDDEN -> resources?.getDimension(R.dimen.bottom_padding_in_hidden_state)?.roundToInt()
+      DOWNLOAD -> resources?.getDimension(R.dimen.bottom_padding_in_play_state)?.roundToInt()
       PLAY -> resources?.getDimension(R.dimen.bottom_padding_in_play_state)?.roundToInt()
       EXPANDED -> resources?.getDimension(R.dimen.bottom_padding_in_expanded_state)?.roundToInt()
       COLLAPSED -> resources?.getDimension(R.dimen.bottom_padding_in_collapsed_state)?.roundToInt()

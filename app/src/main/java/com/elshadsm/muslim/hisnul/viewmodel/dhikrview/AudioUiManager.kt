@@ -19,6 +19,17 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
   var enabled: Boolean = true
   var state: AudioUiState = AudioUiState.PLAY
 
+  fun init() {
+    if (supported && enabled) {
+      val dhikr = activity.viewModel.currentDhikr
+      val audio = requireNotNull(dhikr?.audio) { "Current audio does not exist but have to: -$dhikr-" }
+      switchToDefaultState(audio)
+    } else {
+      switchToHiddenState()
+    }
+    resetAudio()
+  }
+
   fun open() {
     switchToExpandedState()
   }
@@ -29,12 +40,12 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
   }
 
   fun reset() {
-    if (supported && enabled) {
-      switchToPlayState()
-    } else {
-      switchToHiddenState()
+    activity.viewModel.currentDhikr?.audio?.let {
+      supported = true
+    } ?: run {
+      supported = false
     }
-    resetAudio()
+    init()
   }
 
   fun enable() {
@@ -123,6 +134,15 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     }
   }
 
+  private fun switchToDefaultState(audio: String) {
+    val path = activity.audioManager.getAudioPath(audio)
+    if (activity.audioManager.checkFileExists(path)) {
+      switchToPlayState()
+    } else {
+      switchToDownloadState()
+    }
+  }
+
   private fun switchToHiddenState() {
     disableAudioOption()
     state = AudioUiState.HIDDEN
@@ -135,6 +155,19 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
   }
 
+  private fun switchToDownloadState() {
+    enableAudioOption()
+    state = AudioUiState.DOWNLOAD
+    activity.playerView.visibility = View.GONE
+    activity.playerCollapsedView.visibility = View.GONE
+    activity.playerTransformView.visibility = View.GONE
+    activity.playerCloseView.visibility = View.GONE
+    activity.playFab.setImageResource(R.drawable.ic_file_download_white_24dp)
+    activity.playFab.show()
+    activity.playFab.visibility = View.VISIBLE
+    activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
+  }
+
   private fun switchToPlayState() {
     enableAudioOption()
     state = AudioUiState.PLAY
@@ -142,6 +175,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     activity.playerCollapsedView.visibility = View.GONE
     activity.playerTransformView.visibility = View.GONE
     activity.playerCloseView.visibility = View.GONE
+    activity.playFab.setImageResource(R.drawable.exo_controls_play)
     activity.playFab.show()
     activity.playFab.visibility = View.VISIBLE
     activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
