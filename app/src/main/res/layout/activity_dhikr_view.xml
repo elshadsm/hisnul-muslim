@@ -136,13 +136,47 @@
             android:visibility="visible"
             app:srcCompat="@drawable/exo_icon_play" />
 
-        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-            android:id="@+id/playerView"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/playerViewContainer"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/audio_player_view_height"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:visibility="gone"
-            app:show_timeout="0" />
+            android:visibility="gone">
+
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/playerView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/audio_player_view_height"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:show_timeout="0" />
+
+            <ImageButton
+                android:id="@+id/playerClose"
+                android:layout_width="@dimen/icon_size_l"
+                android:layout_height="@dimen/icon_size_l"
+                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginBottom="@dimen/margin_xxs"
+                android:background="@drawable/option_button_background"
+                android:contentDescription="@string/audio_player_close_content_description"
+                android:src="@drawable/ic_close_white_24dp"
+                app:layout_constraintBottom_toTopOf="@+id/playerView"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageButton
+                android:id="@+id/playerTransform"
+                android:layout_width="@dimen/icon_size_l"
+                android:layout_height="@dimen/icon_size_l"
+                android:layout_marginEnd="@dimen/margin"
+                android:layout_marginBottom="@dimen/margin_xxs"
+                android:background="@drawable/option_button_background"
+                android:contentDescription="@string/audio_player_transform_content_description"
+                android:src="@drawable/ic_collapse_player_white_24dp"
+                app:layout_constraintBottom_toTopOf="@+id/playerView"
+                app:layout_constraintEnd_toStartOf="@+id/playerClose" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/playerCollapsedView"
@@ -153,43 +187,5 @@
             app:controller_layout_id="@layout/playback_control_view"
             app:show_timeout="0" />
 
-        <LinearLayout
-            android:id="@+id/playerCloseView"
-            android:layout_width="@dimen/icon_size_l"
-            android:layout_height="@dimen/icon_size_l"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/margin_l"
-            android:layout_marginBottom="@dimen/audio_player_view_close_view_bottom_margin"
-            android:background="@color/black"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:contentDescription="@string/audio_player_close_content_description"
-                app:srcCompat="@drawable/ic_close_white_24dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/playerTransformView"
-            android:layout_width="@dimen/icon_size_l"
-            android:layout_height="@dimen/icon_size_l"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/player_expand_collapse_view_margin_end"
-            android:layout_marginBottom="@dimen/audio_player_view_close_view_bottom_margin"
-            android:background="@color/black"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/playerExpandCollapseIcon"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:contentDescription="@string/audio_player_close_content_description"
-                app:srcCompat="@drawable/ic_collapse_player_white_24dp" />
-        </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -63,26 +63,21 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
 
   fun transform() {
     updateTransformInitialUi()
-    listOf(activity.playerView, activity.playerCloseView, activity.playerTransformView).forEach { animateView(it) }
+    animateView(activity.playerViewContainer)
   }
 
   private fun updateTransformInitialUi() {
     if (state == AudioUiState.COLLAPSED) {
       activity.playerCollapsedView.visibility = View.GONE
-      activity.playerView.visibility = View.VISIBLE
     }
   }
 
   private fun animateView(view: View) {
-    var animatorSet: AnimatorSet? = null
     val float = getDistance().toPixel(activity)
     ObjectAnimator
         .ofFloat(view, "translationY", float)
         .apply {
-          if (view == activity.playerView) {
-            animatorSet = getTransformAnimatorSet(this)
-          }
-          animatorSet?.start() ?: start()
+          getTransformAnimatorSet(this).start()
         }
   }
 
@@ -114,7 +109,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
   private fun updateTransformIcon() {
     ContextCompat.getDrawable(activity, if (state == AudioUiState.COLLAPSED)
       R.drawable.ic_collapse_player_white_24dp else R.drawable.ic_expand_player_white_24dp).let {
-      activity.playerExpandCollapseIcon.setImageDrawable(it)
+      activity.playerTransform.setImageDrawable(it)
     }
   }
 
@@ -126,11 +121,9 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
   private fun restoreTransform() {
     val typedValue = TypedValue()
     activity.resources.getValue(R.dimen.zero_float, typedValue, true)
-    listOf(activity.playerView, activity.playerCloseView, activity.playerTransformView).forEach {
-      it.translationY = typedValue.float
-    }
+    activity.playerViewContainer.translationY = typedValue.float
     ContextCompat.getDrawable(activity, R.drawable.ic_collapse_player_white_24dp).let {
-      activity.playerExpandCollapseIcon.setImageDrawable(it)
+      activity.playerTransform.setImageDrawable(it)
     }
   }
 
@@ -146,60 +139,47 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
   private fun switchToHiddenState() {
     disableAudioOption()
     state = AudioUiState.HIDDEN
-    activity.playerView.visibility = View.GONE
+    activity.playerViewContainer.visibility = View.GONE
     activity.playerCollapsedView.visibility = View.GONE
-    activity.playerTransformView.visibility = View.GONE
-    activity.playerCloseView.visibility = View.GONE
     activity.playFab.hide()
-    activity.playFab.visibility = View.GONE
     activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
   }
 
   private fun switchToDownloadState() {
     enableAudioOption()
     state = AudioUiState.DOWNLOAD
-    activity.playerView.visibility = View.GONE
+    activity.playerViewContainer.visibility = View.GONE
     activity.playerCollapsedView.visibility = View.GONE
-    activity.playerTransformView.visibility = View.GONE
-    activity.playerCloseView.visibility = View.GONE
     activity.playFab.setImageResource(R.drawable.ic_file_download_white_24dp)
     activity.playFab.show()
-    activity.playFab.visibility = View.VISIBLE
     activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
   }
 
   private fun switchToPlayState() {
     enableAudioOption()
     state = AudioUiState.PLAY
-    activity.playerView.visibility = View.GONE
+    activity.playerViewContainer.visibility = View.GONE
     activity.playerCollapsedView.visibility = View.GONE
-    activity.playerTransformView.visibility = View.GONE
-    activity.playerCloseView.visibility = View.GONE
     activity.playFab.setImageResource(R.drawable.exo_controls_play)
     activity.playFab.show()
-    activity.playFab.visibility = View.VISIBLE
     activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
   }
 
   private fun switchToExpandedState() {
+    enableAudioOption()
     state = AudioUiState.EXPANDED
-    activity.playerView.visibility = View.VISIBLE
+    activity.playerViewContainer.visibility = View.VISIBLE
     activity.playerCollapsedView.visibility = View.GONE
-    activity.playerTransformView.visibility = View.VISIBLE
-    activity.playerCloseView.visibility = View.VISIBLE
     activity.playFab.hide()
-    activity.playFab.visibility = View.GONE
     activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
   }
 
   fun switchToCollapsedState() {
+    enableAudioOption()
     state = AudioUiState.COLLAPSED
-    activity.playerView.visibility = View.GONE
+    activity.playerViewContainer.visibility = View.VISIBLE
     activity.playerCollapsedView.visibility = View.VISIBLE
-    activity.playerTransformView.visibility = View.VISIBLE
-    activity.playerCloseView.visibility = View.VISIBLE
     activity.playFab.hide()
-    activity.playFab.visibility = View.GONE
     activity.events.notifyAudioUiStateChanged(state, activity.viewModel.currentPage)
   }
 

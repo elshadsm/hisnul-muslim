@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Outline
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.AppBarLayout
@@ -13,7 +12,6 @@ import androidx.viewpager.widget.ViewPager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewOutlineProvider
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -132,7 +130,6 @@ class DhikrViewActivity : AppCompatActivity() {
     audioManager = AudioManager(this)
     audioUiManager = AudioUiManager(this)
     permissionsManager.start()
-    applyPlayerOptionsConfiguration()
   }
 
   private fun registerEventHandlers() {
@@ -141,8 +138,8 @@ class DhikrViewActivity : AppCompatActivity() {
     onAudioComplete = DownloadCompleteReceiver()
     registerReceiver(onAudioComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     playFab.setOnClickListener { audioManager.play() }
-    playerCloseView.setOnClickListener { audioUiManager.close() }
-    playerTransformView.setOnClickListener { audioUiManager.transform() }
+    playerClose.setOnClickListener { audioUiManager.close() }
+    playerTransform.setOnClickListener { audioUiManager.transform() }
     viewModel.dhikrList.observe(this, Observer { handleDhikrListUpdate() })
     viewModel.bookmarkList.observe(this, Observer { updateBookmarkOptionIcon() })
   }
@@ -185,18 +182,6 @@ class DhikrViewActivity : AppCompatActivity() {
       menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_bookmark_white_24dp)
     } else {
       menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_bookmark_border_white_24dp)
-    }
-  }
-
-  private fun applyPlayerOptionsConfiguration() {
-    listOf(playerCloseView, playerTransformView).forEach {
-      it.outlineProvider = object : ViewOutlineProvider() {
-        override fun getOutline(view: View?, outline: Outline?) {
-          val radius = resources.getDimension(R.dimen.margin_s)
-          outline?.setRoundRect(0, 0, view?.width ?: 0, view?.height ?: 0, radius)
-        }
-      }
-      it.clipToOutline = true
     }
   }
 
