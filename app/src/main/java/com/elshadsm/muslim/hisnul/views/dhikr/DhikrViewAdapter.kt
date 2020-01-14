@@ -1,16 +1,13 @@
-package com.elshadsm.muslim.hisnul.adapters
+package com.elshadsm.muslim.hisnul.views.dhikr
 
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.elshadsm.muslim.hisnul.activities.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.database.Dhikr
-import com.elshadsm.muslim.hisnul.fragments.DhikrViewFragment
 import com.elshadsm.muslim.hisnul.listeners.OnGestureListenerAdapter
 import com.elshadsm.muslim.hisnul.models.DHIKR_PARCEABLE_NAME
-import com.elshadsm.muslim.hisnul.viewmodel.dhikrview.DhikrViewModel
 
 class DhikrViewAdapter(fragmentManager: FragmentManager, private val activity: DhikrViewActivity)
   : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

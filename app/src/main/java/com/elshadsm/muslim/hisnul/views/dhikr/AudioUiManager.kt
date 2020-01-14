@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.viewmodel.dhikrview
+package com.elshadsm.muslim.hisnul.views.dhikr
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -8,7 +8,6 @@ import android.util.TypedValue
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.activities.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.ktx.toPixel
 import com.elshadsm.muslim.hisnul.models.AudioUiState
 import kotlinx.android.synthetic.main.activity_dhikr_view.*

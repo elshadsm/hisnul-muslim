@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.adapters
+package com.elshadsm.muslim.hisnul.views.main
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.activities.DhikrViewActivity
+import com.elshadsm.muslim.hisnul.views.dhikr.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.database.AppDataBase
 import com.elshadsm.muslim.hisnul.database.Title
 import com.elshadsm.muslim.hisnul.models.DHIKR_ID_EXTRA_NAME

@@ -11,7 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.activities.DhikrViewActivity
+import com.elshadsm.muslim.hisnul.views.dhikr.DhikrViewActivity
 
 class PermissionsManager(private val activity: DhikrViewActivity) {
 

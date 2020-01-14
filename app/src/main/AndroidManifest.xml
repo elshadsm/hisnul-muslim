@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".views.main.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -38,9 +38,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.DhikrViewActivity"
+            android:name=".views.dhikr.DhikrViewActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".activities.MainActivity" />
+            android:parentActivityName=".views.main.MainActivity" />
     </application>
 
 </manifest>

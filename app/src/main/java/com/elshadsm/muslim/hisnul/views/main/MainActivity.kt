@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.activities
+package com.elshadsm.muslim.hisnul.views.main
 
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -11,7 +11,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.RecyclerView
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.adapters.DhikrTitleListAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*

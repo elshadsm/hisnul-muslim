@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.viewmodel.dhikrview
+package com.elshadsm.muslim.hisnul.views.dhikr
 
 import android.app.DownloadManager
 import android.content.Context
@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.activities.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.models.AUDIO_DIRECTORY
 import com.elshadsm.muslim.hisnul.models.AUDIO_URL_PREFIX
 import com.elshadsm.muslim.hisnul.services.LocalCacheDataSourceFactory

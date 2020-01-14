@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.AsyncTask
 import com.elshadsm.muslim.hisnul.database.AppDataBase
 import com.elshadsm.muslim.hisnul.database.Bookmark
-import com.elshadsm.muslim.hisnul.viewmodel.dhikrview.DhikrViewModel
+import com.elshadsm.muslim.hisnul.views.dhikr.DhikrViewModel
 
 @SuppressLint("StaticFieldLeak")
 class GetBookmarkFromDbTask(private val context: Context,

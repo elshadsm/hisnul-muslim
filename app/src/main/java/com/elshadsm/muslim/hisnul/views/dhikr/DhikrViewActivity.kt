@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.activities
+package com.elshadsm.muslim.hisnul.views.dhikr
 
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
@@ -16,13 +16,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.adapters.DhikrViewAdapter
-import com.elshadsm.muslim.hisnul.listeners.DhikrEvents
 import com.elshadsm.muslim.hisnul.models.*
 import com.elshadsm.muslim.hisnul.services.*
-import com.elshadsm.muslim.hisnul.viewmodel.dhikrview.AudioManager
-import com.elshadsm.muslim.hisnul.viewmodel.dhikrview.AudioUiManager
-import com.elshadsm.muslim.hisnul.viewmodel.dhikrview.DhikrViewModel
 import kotlinx.android.synthetic.main.activity_dhikr_view.*
 
 class DhikrViewActivity : AppCompatActivity() {

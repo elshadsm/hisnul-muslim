@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.viewmodel.dhikrview
+package com.elshadsm.muslim.hisnul.views.dhikr
 
 import android.content.Context
 import android.content.Intent

@@ -1,11 +1,11 @@
-package com.elshadsm.muslim.hisnul.fragments
+package com.elshadsm.muslim.hisnul.views.dhikr
 
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.database.Dhikr
-import com.elshadsm.muslim.hisnul.listeners.DhikrEvents.AudioUiListener
+import com.elshadsm.muslim.hisnul.views.dhikr.DhikrEvents.AudioUiListener
 import com.elshadsm.muslim.hisnul.listeners.OnGestureListenerAdapter
 import com.elshadsm.muslim.hisnul.models.AudioUiState
 import com.elshadsm.muslim.hisnul.models.AudioUiState.*

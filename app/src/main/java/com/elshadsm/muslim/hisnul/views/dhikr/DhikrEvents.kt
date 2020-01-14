@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.listeners
+package com.elshadsm.muslim.hisnul.views.dhikr
 
 import com.elshadsm.muslim.hisnul.models.AudioUiState
 
