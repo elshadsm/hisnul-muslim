@@ -1,97 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <FrameLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/fragmentDhikrViewNestedScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:clipToPadding="false"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingLeft="@dimen/padding"
+        android:paddingTop="@dimen/padding_l"
+        android:paddingRight="@dimen/padding">
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/fragmentDhikrViewNestedScrollView"
+        <LinearLayout
+            android:id="@+id/linerLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingLeft="@dimen/padding"
-            android:paddingTop="@dimen/padding_l"
-            android:paddingRight="@dimen/padding"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/linerLayout"
+            <TextView
+                android:id="@+id/arabic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginRight="@dimen/margin"
+                android:fontFamily="@font/uthman_tn_1_ver_10"
+                android:textSize="@dimen/arabic_text_size" />
+
+            <LinearLayout
+                android:id="@+id/compiledLinerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_l"
+                android:layout_marginEnd="@dimen/margin"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/compiledLine"
+                    android:layout_width="@dimen/text_prefix_line_width"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimaryDark" />
 
                 <TextView
-                    android:id="@+id/arabic"
+                    android:id="@+id/compiled"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin"
-                    android:layout_marginRight="@dimen/margin"
-                    android:textSize="@dimen/arabic_text_size"
-                    android:fontFamily="@font/uthman_tn_1_ver_10" />
-
-                <LinearLayout
-                    android:id="@+id/compiledLinerLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_l"
-                    android:layout_marginEnd="@dimen/margin"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:id="@+id/compiledLine"
-                        android:layout_height="match_parent"
-                        android:layout_width="@dimen/text_prefix_line_width"
-                        android:background="@color/colorPrimaryDark" />
-
-                    <TextView
-                        android:id="@+id/compiled"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/compiled_text_size"
-                        android:layout_marginStart="@dimen/margin" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/translationLinerLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_l"
-                    android:layout_marginEnd="@dimen/margin"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:id="@+id/translationLine"
-                        android:layout_height="match_parent"
-                        android:layout_width="@dimen/text_prefix_line_width"
-                        android:background="@color/colorPrimary" />
-
-                    <TextView
-                        android:id="@+id/translation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin"
-                        android:textSize="@dimen/translation_text_size" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/reference"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/reference_text_size"
-                    android:layout_marginLeft="@dimen/margin"
-                    android:layout_marginTop="@dimen/margin_l"
-                    android:layout_marginRight="@dimen/margin" />
-
-                <Space
-                    android:id="@+id/space"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/zero_size" />
+                    android:layout_marginStart="@dimen/margin"
+                    android:textSize="@dimen/compiled_text_size" />
             </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+            <LinearLayout
+                android:id="@+id/translationLinerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_l"
+                android:layout_marginEnd="@dimen/margin"
+                android:orientation="horizontal">
 
-    </FrameLayout>
-</layout>
+                <View
+                    android:id="@+id/translationLine"
+                    android:layout_width="@dimen/text_prefix_line_width"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/translation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin"
+                    android:textSize="@dimen/translation_text_size" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/reference"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin"
+                android:layout_marginTop="@dimen/margin_l"
+                android:layout_marginRight="@dimen/margin"
+                android:textSize="@dimen/reference_text_size" />
+
+            <Space
+                android:id="@+id/space"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/zero_size" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>
