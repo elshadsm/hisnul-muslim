@@ -25,6 +25,7 @@ class DhikrViewActivity : AppCompatActivity() {
   lateinit var audioUiManager: AudioUiManager
   lateinit var audioManager: AudioManager
   lateinit var viewModel: DhikrViewModel
+  lateinit var viewModelFactory: DhikrViewModelFactory
   val events = DhikrEvents()
   var menu: Menu? = null
 
@@ -44,7 +45,6 @@ class DhikrViewActivity : AppCompatActivity() {
     menuInflater.inflate(R.menu.dhikr_view_actions, menu)
     this.menu = menu
     updateBookmarkOptionIcon()
-    audioUiManager.init()
     return true
   }
 
@@ -55,18 +55,18 @@ class DhikrViewActivity : AppCompatActivity() {
         return true
       }
       R.id.option_bookmark -> {
-        viewModel.updateBookmark(this)
+        viewModel.updateBookmark()
         return true
       }
       R.id.option_share -> {
-        viewModel.shareDhikr(this)
+        viewModel.shareDhikr()
         return true
       }
       R.id.option_settings -> {
         return true
       }
     }
-    return super.onOptionsItemSelected(item)
+    return super.onOptionsItemSelected(item!!)
   }
 
   override fun onStart() {
@@ -115,8 +115,9 @@ class DhikrViewActivity : AppCompatActivity() {
   }
 
   private fun applyConfiguration() {
-    viewModel = ViewModelProviders.of(this).get(DhikrViewModel::class.java)
-    intent.extras?.getInt(DHIKR_ID_EXTRA_NAME)?.let { viewModel.applyConfiguration(this, it) }
+    viewModelFactory = DhikrViewModelFactory(this)
+    viewModel = ViewModelProviders.of(this, viewModelFactory).get(DhikrViewModel::class.java)
+    intent.extras?.getInt(DHIKR_ID_EXTRA_NAME)?.let { viewModel.initializeData(it) }
     pagerAdapter = DhikrViewAdapter(supportFragmentManager, this)
     intent.extras?.getString(DHIKR_TITLE_EXTRA_NAME)?.let {
       toolbarTitle.text = it

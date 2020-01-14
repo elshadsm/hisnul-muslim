@@ -5,14 +5,15 @@ import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.elshadsm.muslim.hisnul.R
+import com.elshadsm.muslim.hisnul.database.AppDataBase
 import com.elshadsm.muslim.hisnul.database.Bookmark
 import com.elshadsm.muslim.hisnul.database.Dhikr
-import com.elshadsm.muslim.hisnul.models.BookmarkOperation
-import com.elshadsm.muslim.hisnul.services.GetBookmarkFromDbTask
-import com.elshadsm.muslim.hisnul.services.GetDhikrFromDbTask
-import com.elshadsm.muslim.hisnul.services.InsertOrUpdateBookmarkFromDbTask
+import kotlinx.coroutines.*
 
-class DhikrViewModel : ViewModel() {
+class DhikrViewModel(private val context: Context) : ViewModel() {
+
+  private var viewModelJob = Job()
+  private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
   var dhikrList = MutableLiveData<List<Dhikr>>()
   var bookmarkList = MutableLiveData<MutableList<Bookmark>>()
@@ -24,28 +25,31 @@ class DhikrViewModel : ViewModel() {
   private val currentDhikrId: Int
     get() = currentDhikr?._id ?: -1
 
-  fun applyConfiguration(context: Context, titleId: Int) {
-    this.titleId = titleId
-    GetDhikrFromDbTask(context, this, titleId).execute()
-    GetBookmarkFromDbTask(context, this, titleId).execute()
+  override fun onCleared() {
+    super.onCleared()
+    viewModelJob.cancel()
   }
 
-  fun updateBookmark(context: Context) {
-    val operation: BookmarkOperation
+  fun initializeData(titleId: Int) {
+    this.titleId = titleId
+    initializeDhikrList()
+    initializeBookmarkList()
+  }
+
+  fun updateBookmark() {
     var bookmark = getSelectedBookmark()
     if (bookmark == null) {
-      operation = BookmarkOperation.INSERT
       bookmark = Bookmark(titleId = titleId, dhikrId = currentDhikrId)
       bookmarkList.value?.add(bookmark)
+      uiScope.launch { insertBookmark(bookmark) }
     } else {
-      operation = BookmarkOperation.DELETE
       bookmarkList.value?.removeIf { it.dhikrId == currentDhikrId }
+      uiScope.launch { deleteBookmark(bookmark) }
     }
-    InsertOrUpdateBookmarkFromDbTask(context, bookmark, operation).execute()
     bookmarkList.notifyObserver()
   }
 
-  fun shareDhikr(context: Context) {
+  fun shareDhikr() {
     val body = getShareBody()
     val intent = Intent(Intent.ACTION_SEND)
     intent.type = "text/plain"
@@ -65,6 +69,40 @@ class DhikrViewModel : ViewModel() {
 
   private fun <T> MutableLiveData<T>.notifyObserver() {
     this.value = this.value
+  }
+
+  private fun initializeDhikrList() {
+    uiScope.launch {
+      dhikrList.value = getDhikrListFromDatabase()
+    }
+  }
+
+  private suspend fun getDhikrListFromDatabase() = withContext(Dispatchers.IO) {
+    val dataBase = AppDataBase.getInstance(context)
+    val list = dataBase.dhikrDao().getDhikr(titleId)
+    list
+  }
+
+  private fun initializeBookmarkList() {
+    uiScope.launch {
+      bookmarkList.value = getBookmarkListFromDatabase()
+    }
+  }
+
+  private suspend fun getBookmarkListFromDatabase() = withContext(Dispatchers.IO) {
+    val dataBase = AppDataBase.getInstance(context)
+    val list = dataBase.bookmarkDao().getBookmark(titleId)
+    list
+  }
+
+  private suspend fun insertBookmark(bookmark: Bookmark) = withContext(Dispatchers.IO) {
+    val dataBase = AppDataBase.getInstance(context)
+    dataBase.bookmarkDao().insertBookmark(bookmark)
+  }
+
+  private suspend fun deleteBookmark(bookmark: Bookmark) = withContext(Dispatchers.IO) {
+    val dataBase = AppDataBase.getInstance(context)
+    dataBase.bookmarkDao().deleteBookmark(bookmark)
   }
 
 }

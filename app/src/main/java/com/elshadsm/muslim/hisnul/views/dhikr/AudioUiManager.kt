@@ -18,17 +18,6 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
   var enabled: Boolean = true
   var state: AudioUiState = AudioUiState.PLAY
 
-  fun init() {
-    if (supported && enabled) {
-      val dhikr = activity.viewModel.currentDhikr
-      val audio = requireNotNull(dhikr?.audio) { "Current audio does not exist but have to: -$dhikr-" }
-      switchToDefaultState(audio)
-    } else {
-      switchToHiddenState()
-    }
-    resetAudio()
-  }
-
   fun open() {
     switchToExpandedState()
   }
@@ -44,7 +33,7 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
     } ?: run {
       supported = false
     }
-    init()
+    refresh()
   }
 
   fun enable() {
@@ -63,6 +52,17 @@ class AudioUiManager(private val activity: DhikrViewActivity) {
   fun transform() {
     updateTransformInitialUi()
     animateView(activity.playerViewContainer)
+  }
+
+  private fun refresh() {
+    if (supported && enabled) {
+      val dhikr = activity.viewModel.currentDhikr
+      val audio = requireNotNull(dhikr?.audio) { "Current audio does not exist but have to: -$dhikr-" }
+      switchToDefaultState(audio)
+    } else {
+      switchToHiddenState()
+    }
+    resetAudio()
   }
 
   private fun updateTransformInitialUi() {

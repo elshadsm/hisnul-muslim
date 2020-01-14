@@ -8,30 +8,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.elshadsm.muslim.hisnul.R
-import com.elshadsm.muslim.hisnul.views.dhikr.DhikrViewActivity
-import com.elshadsm.muslim.hisnul.database.AppDataBase
 import com.elshadsm.muslim.hisnul.database.Title
+import com.elshadsm.muslim.hisnul.views.dhikr.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.models.DHIKR_ID_EXTRA_NAME
 import com.elshadsm.muslim.hisnul.models.DHIKR_TITLE_EXTRA_NAME
-import com.elshadsm.muslim.hisnul.services.GetTitleListFromDbTask
+import kotlinx.android.synthetic.main.dhikr_title_list_item.view.*
 
-class DhikrTitleListAdapter(private val context: Context) :
+class DhikrTitleListAdapter(private val context: Context, private val mainViewModel: MainViewModel) :
     RecyclerView.Adapter<DhikrTitleListAdapter.RecyclerViewHolder>() {
-
-  private var titleList = listOf<Title>()
-
-  val appDataBase: AppDataBase = AppDataBase.getInstance(context)
-
-  init {
-    GetTitleListFromDbTask(this).execute()
-  }
-
-  fun setData(data: List<Title>?) {
-    data?.let {
-      titleList = it
-      notifyDataSetChanged()
-    }
-  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
@@ -39,27 +23,36 @@ class DhikrTitleListAdapter(private val context: Context) :
     return RecyclerViewHolder(layoutInflater)
   }
 
-  override fun getItemCount(): Int = titleList.size
+  override fun getItemCount(): Int = mainViewModel.titleList.value?.size ?: 0
 
   override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-    val title = titleList[position]
-    holder.number.text = title.index.toString().padStart(context.resources.getInteger(R.integer.dhikr_title_number_pad))
-    holder.title.text = title.text
+    getTitle(position)?.let { holder.bind(it) }
   }
 
+  private fun getTitle(position: Int) = mainViewModel.titleList.value?.get(position)
+
   inner class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-    val number = itemView.findViewById<TextView>(R.id.dhikr_title_li_number)!!
-    val title = itemView.findViewById<TextView>(R.id.dhikr_title_li_title)!!
+
+    private val numberView: TextView = itemView.numberView
+    private val titleView: TextView = itemView.titleView
 
     init {
       itemView.setOnClickListener(this)
     }
 
     override fun onClick(view: View) {
-      val intent = Intent(view.context, DhikrViewActivity::class.java)
-      intent.putExtra(DHIKR_ID_EXTRA_NAME, titleList[adapterPosition]._id)
-      intent.putExtra(DHIKR_TITLE_EXTRA_NAME, titleList[adapterPosition].text)
-      view.context.startActivity(intent)
+      getTitle(adapterPosition)?.let {
+        val intent = Intent(view.context, DhikrViewActivity::class.java)
+        intent.putExtra(DHIKR_ID_EXTRA_NAME, it._id)
+        intent.putExtra(DHIKR_TITLE_EXTRA_NAME, it.text)
+        view.context.startActivity(intent)
+      }
+    }
+
+    fun bind(title: Title) {
+      val pad = context.resources.getInteger(R.integer.dhikr_title_number_pad)
+      numberView.text = title.index.toString().padStart(pad)
+      titleView.text = title.text
     }
 
   }
