@@ -1,4 +1,4 @@
-package com.elshadsm.muslim.hisnul.views.main
+package com.elshadsm.muslim.hisnul.views.search
 
 import android.content.Context
 import android.content.Intent
@@ -9,13 +9,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.database.Title
-import com.elshadsm.muslim.hisnul.views.dhikr.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.models.DHIKR_ID_EXTRA_NAME
 import com.elshadsm.muslim.hisnul.models.DHIKR_TITLE_EXTRA_NAME
+import com.elshadsm.muslim.hisnul.views.dhikr.DhikrViewActivity
 import kotlinx.android.synthetic.main.dhikr_title_list_item.view.*
 
-class DhikrTitleListAdapter(private val context: Context, private val viewModel: MainViewModel) :
-    RecyclerView.Adapter<DhikrTitleListAdapter.RecyclerViewHolder>() {
+class SearchAdapter(private val context: Context, private val viewModel: SearchViewModel) :
+    RecyclerView.Adapter<SearchAdapter.RecyclerViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)

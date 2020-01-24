@@ -1,5 +1,6 @@
 package com.elshadsm.muslim.hisnul.views.main
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
@@ -13,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.elshadsm.muslim.hisnul.R
+import com.elshadsm.muslim.hisnul.views.search.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -45,7 +47,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
-      R.id.action_settings -> true
+      R.id.action_search -> {
+        startActivity(Intent(this, SearchActivity::class.java))
+        true
+      }
       else -> super.onOptionsItemSelected(item)
     }
   }

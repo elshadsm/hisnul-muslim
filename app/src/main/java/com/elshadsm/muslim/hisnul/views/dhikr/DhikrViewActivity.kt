@@ -65,6 +65,10 @@ class DhikrViewActivity : AppCompatActivity() {
       R.id.option_settings -> {
         return true
       }
+      android.R.id.home -> {
+        finish()
+        return true
+      }
     }
     return super.onOptionsItemSelected(item!!)
   }

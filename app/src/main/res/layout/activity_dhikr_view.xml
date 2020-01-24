@@ -30,7 +30,7 @@
 
                 <TextView
                     android:id="@+id/ctlTitle"
-                    android:layout_width="@dimen/zero_size"
+                    android:layout_width="@dimen/size_zero"
                     android:layout_height="@dimen/ctl_constraint_layout_title_height"
                     android:layout_marginStart="@dimen/margin_l"
                     android:layout_marginEnd="@dimen/margin_l"
@@ -79,7 +79,7 @@
 
                     <TextView
                         android:id="@+id/toolbarTitle"
-                        android:layout_width="@dimen/zero_size"
+                        android:layout_width="@dimen/size_zero"
                         android:layout_height="match_parent"
                         android:layout_gravity="start"
                         android:layout_marginTop="@dimen/margin"

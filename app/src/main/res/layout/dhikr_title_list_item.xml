@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/titleView"
         style="@style/DhikrTitleListItemText"
-        android:layout_width="@dimen/zero_size"
+        android:layout_width="@dimen/size_zero"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_l"
         android:layout_marginEnd="@dimen/margin_l"
