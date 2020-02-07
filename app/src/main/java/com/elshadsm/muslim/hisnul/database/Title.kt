@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class Title(
     @PrimaryKey(autoGenerate = true)
     val _id: Int,
-    val index: Int,
+    val number: Int,
     val text: String)

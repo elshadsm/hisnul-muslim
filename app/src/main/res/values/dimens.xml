@@ -17,6 +17,9 @@
     <dimen name="ctl_constraint_layout_title_height">44dp</dimen>
     <dimen name="ctl_constraint_layout_pagination_height">44dp</dimen>
 
+    <dimen name="list_badge_size">40dp</dimen>
+    <dimen name="list_badge_radius">20dp</dimen>
+
     <!--  16dp padding  -->
     <dimen name="bottom_padding_in_hidden_state">16dp</dimen>
     <!--  72dp fab height + 16dp padding  -->
@@ -45,7 +48,6 @@
 
     <dimen name="padding_l">16dp</dimen>
     <dimen name="padding">8dp</dimen>
-    <dimen name="padding_10">10dp</dimen>
 
     <dimen name="icon_size">24dp</dimen>
     <dimen name="icon_size_l">32dp</dimen>
@@ -62,8 +64,6 @@
     <dimen name="translation_text_size">16sp</dimen>
     <dimen name="reference_text_size">14sp</dimen>
     <dimen name="content_text">16sp</dimen>
-
-    <integer name="dhikr_title_number_pad">3</integer>
 
     <!--  88dp player height - 16dp collapsed player height -->
     <item name="player_collapse_distance" format="float" type="dimen">72.0</item>

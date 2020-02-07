@@ -32,7 +32,7 @@ class DhikrViewActivity : AppCompatActivity() {
   private lateinit var onAudioComplete: BroadcastReceiver
   private lateinit var pagerAdapter: DhikrViewAdapter
   private val permissionsManager = PermissionsManager(this)
-  private val paginationStartNumber = 0
+  private var paginationStartNumber = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -127,6 +127,7 @@ class DhikrViewActivity : AppCompatActivity() {
       toolbarTitle.text = it
       ctlTitle.text = it
     }
+    intent.extras?.getInt(DHIKR_PAGINATION_START_NUMBER, 1)?.let { paginationStartNumber = it - 1 }
     audioManager = AudioManager(this)
     audioUiManager = AudioUiManager(this)
     permissionsManager.start()
@@ -140,8 +141,11 @@ class DhikrViewActivity : AppCompatActivity() {
     playFab.setOnClickListener { audioManager.play() }
     playerClose.setOnClickListener { audioUiManager.close() }
     playerTransform.setOnClickListener { audioUiManager.transform() }
-    viewModel.dhikrList.observe(this, Observer { handleDhikrListUpdate() })
-    viewModel.bookmarkList.observe(this, Observer { updateBookmarkOptionIcon() })
+    viewModel.dhikrList.observe(this, Observer {
+      handleDhikrListUpdate()
+      updateBookmarkOptionIcon()
+    })
+    viewModel.bookmarkUpdated.observe(this, Observer { updateBookmarkOptionIcon() })
   }
 
   private fun hideActions() {
@@ -161,6 +165,12 @@ class DhikrViewActivity : AppCompatActivity() {
     toolbarPagination.visibility = if (toolbarCollapsed) View.VISIBLE else View.INVISIBLE
   }
 
+  private fun handleDhikrListUpdate() {
+    pagerAdapter.createFragments(viewModel)
+    viewPager.adapter = pagerAdapter
+    updatePagination(paginationStartNumber, pagerAdapter.count)
+  }
+
   private fun updatePagination(currentPage: Int, totalPage: Int) {
     val paginationText = String.format(resources.getString(R.string.dhikr_view_pagination), (currentPage + 1), totalPage)
     ctlPagination.text = paginationText
@@ -168,17 +178,12 @@ class DhikrViewActivity : AppCompatActivity() {
     viewModel.currentPage = currentPage
     audioUiManager.reset()
     updateBookmarkOptionIcon()
-  }
-
-  private fun handleDhikrListUpdate() {
-    pagerAdapter.createFragments(viewModel)
-    viewPager.adapter = pagerAdapter
-    updatePagination(paginationStartNumber, pagerAdapter.count)
+    viewPager.currentItem = currentPage
   }
 
   private fun updateBookmarkOptionIcon() {
     val menuItem = menu?.findItem(R.id.option_bookmark)
-    if (viewModel.isSelectedBookmark()) {
+    if (viewModel.isBookmarked()) {
       menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_bookmark_white_24dp)
     } else {
       menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_bookmark_border_white_24dp)

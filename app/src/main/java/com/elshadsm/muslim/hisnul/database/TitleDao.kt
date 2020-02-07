@@ -13,6 +13,9 @@ interface TitleDao {
   @Query("SELECT * FROM title")
   fun getAll(): List<Title>
 
+  @Query("SELECT * FROM title where _id = :id")
+  fun getTitle(id: Int): Title
+
   @Query("SELECT * FROM title WHERE text LIKE '%' || :query || '%'")
   fun search(query: String): List<Title>
 

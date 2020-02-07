@@ -10,7 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import java.io.FileOutputStream
 import java.io.IOException
 
-@Database(entities = [Title::class, Dhikr::class, Bookmark::class], version = 1, exportSchema = false)
+@Database(entities = [Title::class, Dhikr::class], version = 1, exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
   abstract fun titleDao(): TitleDao

@@ -50,8 +50,7 @@ class SearchAdapter(private val context: Context, private val viewModel: SearchV
     }
 
     fun bind(title: Title) {
-      val pad = context.resources.getInteger(R.integer.dhikr_title_number_pad)
-      numberView.text = title.index.toString().padStart(pad)
+      numberView.text = title.number.toString()
       titleView.text = title.text
     }
 

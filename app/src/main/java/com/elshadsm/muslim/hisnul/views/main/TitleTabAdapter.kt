@@ -14,8 +14,8 @@ import com.elshadsm.muslim.hisnul.models.DHIKR_ID_EXTRA_NAME
 import com.elshadsm.muslim.hisnul.models.DHIKR_TITLE_EXTRA_NAME
 import kotlinx.android.synthetic.main.dhikr_title_list_item.view.*
 
-class DhikrTitleListAdapter(private val context: Context, private val viewModel: MainViewModel) :
-    RecyclerView.Adapter<DhikrTitleListAdapter.RecyclerViewHolder>() {
+class TitleTabAdapter(private val context: Context, private val viewModel: TitleTabViewModel) :
+    RecyclerView.Adapter<TitleTabAdapter.RecyclerViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)
@@ -50,8 +50,7 @@ class DhikrTitleListAdapter(private val context: Context, private val viewModel:
     }
 
     fun bind(title: Title) {
-      val pad = context.resources.getInteger(R.integer.dhikr_title_number_pad)
-      numberView.text = title.index.toString().padStart(pad)
+      numberView.text = title.number.toString()
       titleView.text = title.text
     }
 

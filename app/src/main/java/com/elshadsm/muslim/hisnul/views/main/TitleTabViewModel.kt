@@ -7,7 +7,7 @@ import com.elshadsm.muslim.hisnul.database.AppDataBase
 import com.elshadsm.muslim.hisnul.database.Title
 import kotlinx.coroutines.*
 
-class MainViewModel(private val context: Context) : ViewModel() {
+class TitleTabViewModel(private val context: Context) : ViewModel() {
 
   private var viewModelJob = Job()
   private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)

@@ -1,15 +1,12 @@
 package com.elshadsm.muslim.hisnul.database
 
-import androidx.room.*
+import androidx.room.ColumnInfo
 
-@Entity(tableName = "bookmark", foreignKeys = [
-  ForeignKey(entity = Title::class, parentColumns = ["_id"], childColumns = ["title_id"]),
-  ForeignKey(entity = Dhikr::class, parentColumns = ["_id"], childColumns = ["dhikr_id"])
-])
 data class Bookmark(
-    @PrimaryKey(autoGenerate = true)
-    val _id: Int = 0,
     @ColumnInfo(name = "title_id")
-    val titleId: Int,
-    @ColumnInfo(name = "dhikr_id")
-    val dhikrId: Int)
+    var titleId: Int,
+    @ColumnInfo(name = "title_number")
+    var titleNumber: Int,
+    var title: String,
+    @ColumnInfo(name = "dhikr_number")
+    var dhikrNumber: Int)

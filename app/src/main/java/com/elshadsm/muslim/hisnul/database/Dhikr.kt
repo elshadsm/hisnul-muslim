@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "dhikr", foreignKeys = [
   ForeignKey(entity = Title::class, parentColumns = ["_id"], childColumns = ["title_id"])
 ])
-data class Dhikr(
+class Dhikr(
     @PrimaryKey(autoGenerate = true)
     val _id: Int,
     val arabic: String,
@@ -19,5 +19,13 @@ data class Dhikr(
     val translation: String,
     val reference: String,
     val audio: String?,
+    var bookmark: Int,
+    var number: Int,
     @ColumnInfo(name = "title_id")
-    val titleId: Int) : Parcelable
+    val titleId: Int) : Parcelable {
+  var bookmarked: Boolean
+    set(value) {
+      bookmark = if (value) 1 else 0
+    }
+    get() = bookmark == 1
+}

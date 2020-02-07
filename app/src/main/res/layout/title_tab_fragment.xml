@@ -4,16 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".views.main.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:context=".views.main.TitleTabFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/dhikrTitleListRecyclerView"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingTop="@dimen/padding"
-        android:paddingBottom="@dimen/padding" />
+        android:paddingBottom="@dimen/padding"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </FrameLayout>
