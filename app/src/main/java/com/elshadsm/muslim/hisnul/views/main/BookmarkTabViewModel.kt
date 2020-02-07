@@ -14,7 +14,7 @@ class BookmarkTabViewModel(private val context: Context) : ViewModel(), Bookmark
   private var viewModelJob = Job()
   private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-  var bookmarkList = MutableLiveData<List<Bookmark>>()
+  var bookmarkList = MutableLiveData<MutableList<Bookmark>>()
 
   init {
     GeneralListenersManager.addBookmarkListener(this)
@@ -30,6 +30,14 @@ class BookmarkTabViewModel(private val context: Context) : ViewModel(), Bookmark
     updateTitleList()
   }
 
+  fun deleteBookmark(id: Int) {
+    uiScope.launch {
+      updateBookmarkInDatabase(id, 0)
+      bookmarkList.value?.removeIf { it.dhikrId == id }
+      bookmarkList.value = bookmarkList.value
+    }
+  }
+
   private fun updateTitleList() {
     uiScope.launch {
       bookmarkList.value = getBookmarkListFromDatabase()
@@ -40,6 +48,11 @@ class BookmarkTabViewModel(private val context: Context) : ViewModel(), Bookmark
     val dataBase = AppDataBase.getInstance(context)
     val list = dataBase.bookmarkDao().getAll()
     list
+  }
+
+  private suspend fun updateBookmarkInDatabase(id: Int, bookmark: Int) = withContext(Dispatchers.IO) {
+    val dataBase = AppDataBase.getInstance(context)
+    dataBase.dhikrDao().updateBookmark(id, bookmark)
   }
 
 }

@@ -9,7 +9,6 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.elshadsm.muslim.hisnul.R
 import com.elshadsm.muslim.hisnul.database.Bookmark
@@ -17,7 +16,9 @@ import com.elshadsm.muslim.hisnul.views.dhikr.DhikrViewActivity
 import com.elshadsm.muslim.hisnul.models.DHIKR_ID_EXTRA_NAME
 import com.elshadsm.muslim.hisnul.models.DHIKR_PAGINATION_START_NUMBER
 import com.elshadsm.muslim.hisnul.models.DHIKR_TITLE_EXTRA_NAME
-import kotlinx.android.synthetic.main.dhikr_title_list_item.view.*
+import kotlinx.android.synthetic.main.bookmark_title_list_item.view.*
+import kotlinx.android.synthetic.main.dhikr_title_list_item.view.numberView
+import kotlinx.android.synthetic.main.dhikr_title_list_item.view.titleView
 
 class BookmarkTabAdapter(private val context: Context, private val viewModel: BookmarkTabViewModel) :
     RecyclerView.Adapter<BookmarkTabAdapter.RecyclerViewHolder>() {
@@ -31,22 +32,29 @@ class BookmarkTabAdapter(private val context: Context, private val viewModel: Bo
   override fun getItemCount(): Int = viewModel.bookmarkList.value?.size ?: 0
 
   override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-    getTitle(position)?.let { holder.bind(it) }
+    getBookmark(position)?.let { holder.bind(it) }
   }
 
-  private fun getTitle(position: Int) = viewModel.bookmarkList.value?.get(position)
+  private fun getBookmark(position: Int) = viewModel.bookmarkList.value?.get(position)
 
   inner class RecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-    private val numberView: TextView = itemView.numberView
-    private val titleView: TextView = itemView.titleView
+    private val numberView = itemView.numberView
+    private val titleView = itemView.titleView
+    private val optionIcon = itemView.optionIcon
+    private val closeIcon = itemView.closeIcon
+    private val deleteIcon = itemView.deleteIcon
+    private var expanded = false
 
     init {
       itemView.setOnClickListener(this)
+      optionIcon.setOnClickListener { expand() }
+      closeIcon.setOnClickListener { expand() }
+      deleteIcon.setOnClickListener { delete() }
     }
 
     override fun onClick(view: View) {
-      getTitle(adapterPosition)?.let {
+      getBookmark(adapterPosition)?.let {
         val intent = Intent(view.context, DhikrViewActivity::class.java)
         intent.putExtra(DHIKR_ID_EXTRA_NAME, it.titleId)
         intent.putExtra(DHIKR_TITLE_EXTRA_NAME, it.title)
@@ -56,6 +64,8 @@ class BookmarkTabAdapter(private val context: Context, private val viewModel: Bo
     }
 
     fun bind(bookmark: Bookmark) {
+      expanded = false
+      itemView.content.translationX = 0f
       val number = "(${bookmark.dhikrNumber})"
       val spannable = SpannableString("${bookmark.title} $number")
       val start = bookmark.title.length + 1
@@ -65,6 +75,18 @@ class BookmarkTabAdapter(private val context: Context, private val viewModel: Bo
           Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
       numberView.text = bookmark.titleNumber.toString()
       titleView.text = spannable
+    }
+
+    private fun expand() {
+      val translationX = if (expanded) 0f else -(2 * itemView.width / 5f)
+      expanded = !expanded
+      itemView.content.animate().translationX(translationX)
+    }
+
+    private fun delete() {
+      getBookmark(adapterPosition)?.let {
+        viewModel.deleteBookmark(it.dhikrId)
+      }
     }
 
   }
