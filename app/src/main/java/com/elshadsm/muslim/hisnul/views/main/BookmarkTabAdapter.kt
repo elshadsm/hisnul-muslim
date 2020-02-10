@@ -50,7 +50,11 @@ class BookmarkTabAdapter(private val context: Context, private val viewModel: Bo
       itemView.setOnClickListener(this)
       optionIcon.setOnClickListener { expand() }
       closeIcon.setOnClickListener { expand() }
-      deleteIcon.setOnClickListener { delete() }
+      deleteIcon.setOnClickListener {
+        if (expanded) {
+          delete()
+        }
+      }
     }
 
     override fun onClick(view: View) {

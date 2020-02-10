@@ -27,6 +27,7 @@ class SearchViewModel(private val context: Context) : ViewModel() {
         return
       }
     }
+    titleList.value = listOf()
     updateState(query)
   }
 
