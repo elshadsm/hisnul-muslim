@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/general_background</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
@@ -34,6 +35,11 @@
         <item name="android:textSize">@dimen/content_text</item>
         <item name="android:textColor">@color/primary_text_color</item>
         <item name="android:fontFamily">"sans-serif-medium"</item>
+    </style>
+
+    <style name="NavigationView">
+        <item name="android:listDivider">@color/navigation_separator_background</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
 </resources>

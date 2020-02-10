@@ -59,7 +59,7 @@
     <dimen name="title_step_granularity">1sp</dimen>
     <dimen name="toolbar_title_min_text_size">10sp</dimen>
     <dimen name="toolbar_title_max_text_size">20sp</dimen>
-    <dimen name="arabic_text_size">30sp</dimen>
+    <dimen name="arabic_text_size">32sp</dimen>
     <dimen name="compiled_text_size">18sp</dimen>
     <dimen name="translation_text_size">16sp</dimen>
     <dimen name="reference_text_size">14sp</dimen>

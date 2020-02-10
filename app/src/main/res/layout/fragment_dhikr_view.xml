@@ -28,6 +28,7 @@
                 android:layout_marginLeft="@dimen/margin"
                 android:layout_marginRight="@dimen/margin"
                 android:fontFamily="@font/uthman_tn_1_ver_10"
+                android:textColor="@color/primary_text_color"
                 android:textSize="@dimen/arabic_text_size" />
 
             <LinearLayout
@@ -42,13 +43,15 @@
                     android:id="@+id/compiledLine"
                     android:layout_width="@dimen/text_prefix_line_width"
                     android:layout_height="match_parent"
-                    android:background="@color/colorPrimaryDark" />
+                    android:background="@color/colorAccent" />
 
                 <TextView
                     android:id="@+id/compiled"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin"
+                    android:fontFamily="sans-serif-normal"
+                    android:textColor="@color/primary_text_color"
                     android:textSize="@dimen/compiled_text_size" />
             </LinearLayout>
 
@@ -64,13 +67,15 @@
                     android:id="@+id/translationLine"
                     android:layout_width="@dimen/text_prefix_line_width"
                     android:layout_height="match_parent"
-                    android:background="@color/colorPrimary" />
+                    android:background="@color/colorSecondaryAccent" />
 
                 <TextView
                     android:id="@+id/translation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin"
+                    android:fontFamily="sans-serif-normal"
+                    android:textColor="@color/primary_text_color"
                     android:textSize="@dimen/translation_text_size" />
             </LinearLayout>
 
@@ -81,6 +86,8 @@
                 android:layout_marginLeft="@dimen/margin"
                 android:layout_marginTop="@dimen/margin_l"
                 android:layout_marginRight="@dimen/margin"
+                android:fontFamily="sans-serif-normal"
+                android:textColor="@color/primary_text_color"
                 android:textSize="@dimen/reference_text_size" />
 
             <Space
